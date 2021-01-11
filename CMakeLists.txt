@@ -16,6 +16,11 @@ endif ()
 
 # Prefer libGL.so to libOpenGL.so, see CMP0072
 set(OpenGL_GL_PREFERENCE "LEGACY")
+# Don't use local version of GLU library
+set(USE_LOCAL_GLU FALSE)
+
+option(USE_GL "Enable OpenGL support" ON)
+message(STATUS "${CMLOC}USE_GL: ${USE_GL}")
 
 # Locations where cmake looks for cmake modules.
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/build ${CMAKE_SOURCE_DIR}/cmake)
@@ -56,13 +61,17 @@ option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
 # -------  Plugin setup --------
 #
-project(UKTides_pi VERSION 1.1.0)
+project(UKTides_pi VERSION 1.1.1)
 
 set(DISPLAY_NAME UKTides)    # Dialogs, installer artifacts, ...
 set(PLUGIN_API_NAME UKTides) # As of GetCommonName() in plugin API
 set(CPACK_PACKAGE_CONTACT "Mike Rossiter")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Show UK tidal heights")
-set(CPACK_PACKAGE_DESCRIPTION "Show UK Tides at over 600 ports")
+set(CPACK_PACKAGE_DESCRIPTION
+[=[ 
+Show UK Tides at over 600 ports.
+]=]
+)
 
 set(PKG_RELEASE "1")
 set(PKG_AUTHOR "Mike Rossiter")
@@ -81,6 +90,32 @@ set(SRC
 	src/tidetable.cpp
 	src/tidetable.h
 )
+
+macro(SetupOpenGL)
+  find_package(OpenGL)
+  if (OPENGL_FOUND)
+    # Linking to OPENGL::GL should make it, but fails on Windows.
+    target_link_libraries(${PACKAGE_NAME} ${OPENGL_LIBRARIES})
+    include_directories(${OPENGL_INCLUDE_DIR})
+  endif ()
+  if (APPLE)
+    # This is certainly neither stable nor portable, but I just cannot
+    # figure out how to handle it properly. FindOpenGL should
+    # actually find this directory, but doesn't (:
+    string(CONCAT _glinclude
+       "/Applications/Xcode-*app/Contents/Developer/Platforms"
+       "/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System"
+       "/Library/Frameworks/OpenGL.framework/Versions/A/Headers"
+    )
+    file(GLOB _glinclude ${_glinclude})
+    if (EXISTS "${_glinclude}")
+      include_directories("${_glinclude}")
+    else ()
+      message(WARNING "Cannot find gl.h, using bundled copy")
+      include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/GL")
+    endif ()
+  endif ()
+endmacro()
 
 
 # -------- Setup completed, build the plugin --------
@@ -135,7 +170,14 @@ if (NOT ${BUILD_TYPE} STREQUAL "flatpak")
   add_subdirectory("libs/wxJSON")
   target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
   
+   setupOpenGL()
+  
 endif ()
+
+configure_file(
+  ${CMAKE_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/include/config.h
+  @ONLY
+)
 
 configure_file(
   # The cloudsmith upload script
