@@ -44,23 +44,6 @@
 #include <list>
 #include <vector>
 
-#ifdef ocpnUSE_GL
-#ifdef __WXMSW__
-#include "GL/glu.h"
-#include "GL/gl.h"  // local copy for Windows
-#else
-
-#ifndef __OCPN__ANDROID__
-#include "GL/gl.h"
-#include "GL/glu.h"
-#else
-#include "GL/gl_private.h"
-#include "qopengl.h"  // this gives us the qt runtime gles2.h
-#endif
-
-#endif
-#endif
-
 using namespace std;
 
 struct TidalEvent

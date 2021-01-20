@@ -71,9 +71,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 UKTides_pi::UKTides_pi(void *ppimgr)
       :opencpn_plugin_116 (ppimgr)
 {
-	wxInitAllImageHandlers();
-
-	// Create the PlugIn icons
+		// Create the PlugIn icons
 	initialize_images();
 
 	wxFileName fn;
@@ -84,6 +82,8 @@ UKTides_pi::UKTides_pi(void *ppimgr)
 	fn.SetFullName("uktides_panel_icon.png");
 
 	path = fn.GetFullPath();
+    
+    wxInitAllImageHandlers();
 
 	wxLogDebug(wxString("Using icon path: ") + path);
 	if (!wxImage::CanRead(path)) {

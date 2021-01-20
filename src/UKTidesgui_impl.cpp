@@ -33,7 +33,6 @@
 #include <wx/ffile.h>
 #include <wx/filefn.h>
 #include <wx/url.h>
-#include "json/json.h"
 
 #include <wx/glcanvas.h>
 #include <wx/graphics.h>
