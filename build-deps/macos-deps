@@ -6,6 +6,7 @@ gettext
 libtiff
 libtool
 libexif
+openssl
 pkg-config
 python
 wget
