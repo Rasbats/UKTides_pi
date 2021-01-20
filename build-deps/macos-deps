@@ -1,5 +1,6 @@
 # brew packages installed in macos ci build
 openssl
+libcurl4-openssl-dev
 autoconf
 automake
 cmake
