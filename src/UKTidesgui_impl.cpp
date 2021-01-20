@@ -55,7 +55,7 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 	b_clearAllIcons = false;
 
 	LoadTidalEventsFromXml();
-	RemoveOldDownloads();
+	
 	
 }
 
