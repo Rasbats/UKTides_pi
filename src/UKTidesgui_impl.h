@@ -40,6 +40,9 @@
 #include "wx/stdpaths.h"
 #include "wx/msgdlg.h"
 
+#include "json/reader.h"
+#include "json/writer.h"
+
 #include <map>
 #include <list>
 #include <vector>

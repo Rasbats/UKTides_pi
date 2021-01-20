@@ -38,6 +38,7 @@
 #include <wx/graphics.h>
 
 class Position;
+class myPort;
 
 Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 	: DlgDef(parent),
@@ -485,33 +486,40 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 		m_stUKDownloadInfo->SetLabel(_("Success"));
 	}
 
-    wxString myjson;
+    wxString message_body;
 	wxFFile fileData;
 	fileData.Open(tmp_file, wxT("r"));
-	fileData.ReadAll(&myjson);
+	fileData.ReadAll(&message_body);
 
-	// construct the JSON root object
-	Json::Value  root;
-	// construct a JSON parser
-	Json::Reader reader;
+	Json::CharReaderBuilder builder;
+	Json::CharReader* reader = builder.newCharReader();
+
+	wxString message_id;
+	Json::Value value;
+	string errors;
+
+	bool parsingSuccessful = reader->parse(message_body.c_str(),
+		message_body.c_str() + message_body.size(), &value, &errors);
+	delete reader;
+	
 	wxString error = _("No tidal stations found");
 
-	if (!reader.parse((std::string)myjson, root)) {
+	if (!parsingSuccessful) {
 		wxLogMessage(error);
 		return;
 	}
 
-	if (!root.isMember("features")) {
+	if (!value.isMember("features")) {
 		// Originator
 		wxLogMessage(_("No features found in message"));
 		return;
 	}
 
-	int i = root["features"].size();
+	int i = value["features"].size();
 
 	for (int j = 0; j < i; j++) {
 
-		Json::Value  features = root["features"][j];
+		Json::Value  features = value["features"][j];
 
 		if (!features.isMember("properties")) {
 			// Originator
@@ -545,7 +553,7 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 	fileData.Close();
 
 	RequestRefresh(m_parent);
-	root.clear();
+	value.clear();
 
 }
 
@@ -715,6 +723,9 @@ void Dlg::getHWLW(string id)
 	wxFFile fileData;
 	fileData.Open(tmp_file, wxT("r"));
 	fileData.ReadAll(&myjson);
+
+	Json::CharReaderBuilder builder;
+	Json::CharReader* reader = builder.newCharReader();
 
 	// construct the JSON root object
 	Json::Value  root2;
