@@ -2,7 +2,6 @@
 cmake
 gettext
 libexif
-openssl
 curl
 python
 wget
