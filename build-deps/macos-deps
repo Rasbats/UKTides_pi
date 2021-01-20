@@ -1,7 +1,7 @@
 # brew packages installed in macos ci build
-curl-openssl
 cmake
 gettext
 libexif
+curl-openssl
 python
 wget
