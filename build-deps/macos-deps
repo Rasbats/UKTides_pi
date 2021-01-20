@@ -1,12 +1,7 @@
 # brew packages installed in macos ci build
 curl-openssl
-autoconf
-automake
 cmake
 gettext
-libtiff
-libtool
 libexif
-pkg-config
 python
 wget
