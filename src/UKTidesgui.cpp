@@ -15,27 +15,6 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	this->SetForegroundColour( wxColour( 0, 0, 0 ) );
 	this->SetBackgroundColour( wxColour( 255, 255, 255 ) );
 
-	m_menubar1 = new wxMenuBar( 0 );
-	m_menu1 = new wxMenu();
-	m_menuItem1 = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Download") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem1 );
-
-	m_menuItem3 = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Stations Saved") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem3 );
-
-	m_menuItem4 = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Remove Station Icons") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem4 );
-
-	m_menubar1->Append( m_menu1, _("Locations") );
-
-	m_menu2 = new wxMenu();
-	m_menuItem2 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Guide") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu2->Append( m_menuItem2 );
-
-	m_menubar1->Append( m_menu2, _("Help") );
-
-	this->SetMenuBar( m_menubar1 );
-
 	wxBoxSizer* bSizerMain;
 	bSizerMain = new wxBoxSizer( wxVERTICAL );
 
@@ -57,9 +36,18 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	m_buttonDownload = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _(" Download  "), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerFolder->Add( m_buttonDownload, 0, wxALL|wxEXPAND, 5 );
 
-	m_stUKDownloadInfo = new wxStaticText( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Status:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_stUKDownloadInfo = new wxStaticText( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Status:   Standby"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_stUKDownloadInfo->Wrap( -1 );
 	sbSizerFolder->Add( m_stUKDownloadInfo, 0, wxALL|wxEXPAND, 5 );
+
+	m_buttonSaved = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Show Saved"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerFolder->Add( m_buttonSaved, 0, wxALL|wxEXPAND, 5 );
+
+	m_buttonSaved1 = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Remove Icons"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerFolder->Add( m_buttonSaved1, 0, wxALL|wxEXPAND, 5 );
+
+	m_staticline2 = new wxStaticLine( sbSizerFolder->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	sbSizerFolder->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
 
 
 	bSizerMain->Add( sbSizerFolder, 0, wxEXPAND, 5 );
@@ -89,11 +77,9 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( DlgDef::OnClose ) );
-	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( DlgDef::OnDownload ), this, m_menuItem1->GetId());
-	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( DlgDef::OnGetSavedTides ), this, m_menuItem3->GetId());
-	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( DlgDef::DoRemovePortIcons ), this, m_menuItem4->GetId());
-	m_menu2->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( DlgDef::OnInformation ), this, m_menuItem2->GetId());
 	m_buttonDownload->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnDownload ), NULL, this );
+	m_buttonSaved->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnGetSavedTides ), NULL, this );
+	m_buttonSaved1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::DoRemovePortIcons ), NULL, this );
 }
 
 DlgDef::~DlgDef()
@@ -101,5 +87,7 @@ DlgDef::~DlgDef()
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( DlgDef::OnClose ) );
 	m_buttonDownload->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnDownload ), NULL, this );
+	m_buttonSaved->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnGetSavedTides ), NULL, this );
+	m_buttonSaved1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::DoRemovePortIcons ), NULL, this );
 
 }

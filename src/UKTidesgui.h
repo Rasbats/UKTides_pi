@@ -11,18 +11,18 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
 #include <wx/string.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
-#include <wx/menu.h>
+#include <wx/stattext.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
 #include <wx/button.h>
+#include <wx/statline.h>
 #include <wx/choice.h>
 #include <wx/frame.h>
 
@@ -37,6 +37,7 @@ class DlgDef : public wxFrame
 	private:
 
 	protected:
+		wxStaticLine* m_staticline2;
 		wxStaticText* m_staticText9;
 		wxChoice* m_choice3;
 
@@ -45,20 +46,14 @@ class DlgDef : public wxFrame
 		virtual void OnDownload( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnGetSavedTides( wxCommandEvent& event ) { event.Skip(); }
 		virtual void DoRemovePortIcons( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnInformation( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
-		wxMenuBar* m_menubar1;
-		wxMenu* m_menu1;
-		wxMenuItem* m_menuItem1;
-		wxMenuItem* m_menuItem3;
-		wxMenuItem* m_menuItem4;
-		wxMenu* m_menu2;
-		wxMenuItem* m_menuItem2;
 		wxStaticText* m_stTimeZone;
 		wxButton* m_buttonDownload;
 		wxStaticText* m_stUKDownloadInfo;
+		wxButton* m_buttonSaved;
+		wxButton* m_buttonSaved1;
 
 		DlgDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("UK Tides"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxCLOSE_BOX|wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
 
