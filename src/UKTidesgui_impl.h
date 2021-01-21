@@ -47,6 +47,12 @@
 #include <list>
 #include <vector>
 
+#if __APPLE__
+#include <gl.h>
+#else
+#include <GL/gl.h>
+#endif
+
 using namespace std;
 
 struct TidalEvent
