@@ -31,7 +31,7 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	bSizerMain->Add( sbSizerDateTime, 0, wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbSizerFolder;
-	sbSizerFolder = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Port Locations") ), wxVERTICAL );
+	sbSizerFolder = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Tide Locations") ), wxVERTICAL );
 
 	m_buttonDownload = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _(" Download  "), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerFolder->Add( m_buttonDownload, 0, wxALL|wxEXPAND, 5 );

@@ -48,14 +48,18 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 	this->Fit();
     	dbg=false; //for debug output set to true
 
-	wxFileName fn;
-	wxString tmp_path;
-
 	b_clearSavedIcons = false;
 	b_clearAllIcons = false;
 
+
+	wxFileName fn;
+	wxString tmp_path;
+
 	LoadTidalEventsFromXml();
 	//RemoveOldDownloads();
+
+	//b_clearSavedIcons = false;
+	//b_clearAllIcons = false;
 	
 }
 
@@ -574,7 +578,9 @@ void Dlg::OnGetSavedTides(wxCommandEvent& event) {
 		return;
 	}
 
-	b_clearAllIcons = false;
+	b_clearAllIcons = true;
+	b_clearSavedIcons = false;
+
 	RequestRefresh(m_parent);  //put the saved port icons back
 
 	b_usingSavedPorts = true;
@@ -677,14 +683,14 @@ void Dlg::DoRemovePortIcons(wxCommandEvent& event) {
 	
 	switch (KeepSavedIcons.ShowModal()) {
 		case wxID_YES: {			
-			myports.clear();
+			//myports.clear();
 			b_clearSavedIcons = false;
 			b_clearAllIcons = true;
 			RequestRefresh(m_parent);
 			break; 
 		}
 		case wxID_NO: {
-			mySavedPorts.clear();
+			//mySavedPorts.clear();
 			b_clearSavedIcons = true;
 			b_clearAllIcons = true;
 			RequestRefresh(m_parent);
@@ -796,11 +802,19 @@ void Dlg::getHWLW(string id)
 	OnShow();
 }
 
+void Dlg::OnTest(wxString thePort)
+{
+	//wxMessageBox("OnTest");
+	RemoveSavedPort(thePort);
+}
+
 void Dlg::OnShow(void)
 {
 		tidetable = new TideTable(this, 7000, _("Tides"), wxPoint(200, 200), wxSize(-1, -1), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
 		wxString label = m_titlePortName + _("      (Times are UTC)  ") + _(" (Height in metres)");
 		tidetable->itemStaticBoxSizer14Static->SetLabel(label);
+
+		tidetable->theDialog = this;
 
 		wxString Event;
 		wxString EventDT;
@@ -863,6 +877,8 @@ void Dlg::OnShowSavedPortTides(wxString thisPortId) {
 			wxString m_titlePortTides;
 			m_titlePortTides = (*it).Name;
 
+			tidetable->portName = m_titlePortTides;
+
 			wxString label = m_titlePortTides + _("      (Times are UTC)  ") + _(" (Height in metres)");
 			tidetable->itemStaticBoxSizer14Static->SetLabel(label);
 
@@ -891,6 +907,9 @@ void Dlg::OnShowSavedPortTides(wxString thisPortId) {
 	tidetable->Fit();
 	tidetable->Layout();
 	tidetable->Show();
+	
+	tidetable->theDialog = this;
+
 }
 
 
@@ -909,20 +928,22 @@ void Dlg::AutoSizeHeader(wxListCtrl *const list_ctrl)
 	}
 }
 
-wxString Dlg::getPort(double m_lat, double m_lon) {
-
-	wxString mylat = wxString::Format("%f", m_lat);
+void Dlg::getPort(double m_lat, double m_lon) {	
 	wxString m_portId;
+
+	if (myports.empty()) {
+		wxMessageBox(_("No active tidal stations found. Please download the locations"));
+	}
 
 	m_portId = getPortId(m_lat, m_lon);
 
 	if (m_portId.IsEmpty()) {
-		return wxEmptyString;
+		wxMessageBox(_("Please try again"));
+		return;
 	}
 
 	getHWLW(m_portId.ToStdString());
-
-	return mylat;
+	
 }
 
 wxString Dlg::getPortId(double m_lat, double m_lon) {
@@ -933,11 +954,6 @@ wxString Dlg::getPortId(double m_lat, double m_lon) {
 	double plat;
 	double plon;
 	wxString m_portId;
-
-	if (myports.empty()) {
-		wxMessageBox(_("No active tidal stations found. Please download the locations"));
-		return wxEmptyString;
-	}
 
 	while (!foundPort) {
 		for (std::list<myPort>::iterator it = myports.begin();	it != myports.end(); it++) {
@@ -1215,6 +1231,38 @@ void Dlg::RemoveOldDownloads() {
 
 	SaveTidalEventsToXml(mySavedPorts);
 }
+
+void Dlg::RemoveSavedPort(wxString myStation) {
+	
+	if (mySavedPorts.empty()) {
+		wxMessageBox(_("No saved tidal stations. Please load"));
+		return;
+	}
+
+	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
+		
+		if ((*it).Name == myStation) {
+			mySavedPorts.erase((it));
+		}		
+	}
+
+	SaveTidalEventsToXml(mySavedPorts);
+	GetParent()->Refresh();
+}
+
+void Dlg::RemoveAllSavedPorts() {
+
+	if (mySavedPorts.empty()) {
+		wxMessageBox(_("No saved tidal stations. Please load"));
+		return;
+	}
+
+	mySavedPorts.clear();	
+	SaveTidalEventsToXml(mySavedPorts);
+
+	GetParent()->Refresh();
+}
+
 
 GetTidalEventDialog::GetTidalEventDialog(wxWindow * parent, wxWindowID id, const wxString & title,
 	const wxPoint & position, const wxSize & size, long style)

@@ -265,7 +265,9 @@ void UKTides_pi::OnToolbarToolCallback(int id)
 			if (stationIcon.IsOk())
 				m_pDialog->m_stationBitmap = wxBitmap(stationIcon);
 			else
-				wxLogMessage(_("UKTides:: station bitmap has NOT been loaded"));			
+				wxLogMessage(_("UKTides:: station bitmap has NOT been loaded"));	
+
+			
 			
       }
 

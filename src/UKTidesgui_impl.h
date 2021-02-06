@@ -94,7 +94,7 @@ public:
 		wxString rte_start;
 	    wxString rte_end;
 	
-		wxString getPort(double m_lat, double m_lon);
+		void getPort(double m_lat, double m_lon);
 		wxString m_default_configuration_path;
 		void AutoSizeHeader(wxListCtrl *const list_ctrl);
 
@@ -123,6 +123,9 @@ public:
 		bool b_clearSavedIcons;
 		bool b_clearAllIcons;
 		void OnShow(void);
+		void OnTest(wxString thePort);
+		void RemoveSavedPort(wxString myStation);
+		void RemoveAllSavedPorts();
 
 private:
 	
@@ -148,6 +151,7 @@ private:
 	double AttributeDouble(TiXmlElement *e, const char *name, double def);
 	wxString GetDateStringNow();
 	void RemoveOldDownloads();
+	
 
 	void getHWLW(string id);
 	wxString getPortId(double m_lat, double m_lon);

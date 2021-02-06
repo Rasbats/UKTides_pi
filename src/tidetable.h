@@ -72,6 +72,8 @@
 #define ID_LISTCTRL            7004
 #define ID_ROUTEPROP_CANCEL    7006
 #define ID_ROUTEPROP_OK        7007
+#define ID_ROUTEPROP_DELETE    7008
+#define ID_ROUTEPROP_DELETE_ALL    7009
 #define ID_ROUTEPROP_SPLIT     7107
 #define ID_ROUTEPROP_EXTEND    7207
 #define ID_ROUTEPROP_COPYTXT   7307
@@ -121,10 +123,11 @@
 #define wxFIXED_MINSIZE 0
 #endif
 
+class Dlg;
+
 /*!
  * RouteProp class declaration
  */
-
 
 class TideTable: public wxDialog
 {
@@ -142,19 +145,24 @@ public:
     static bool getInstanceFlag(){ return instanceFlag; } 
     
     void CreateControls();
- 
 	
     void SetDialogTitle(const wxString & title);
 	void OnRoutepropOkClick( wxCommandEvent& event );
+	void OnRoutepropDeleteClick(wxCommandEvent& event);
+	void OnRoutepropDeleteAllClick(wxCommandEvent& event);
 
-
-    wxListCtrl        *m_wpList;
+    wxListCtrl    *m_wpList;
     wxButton*     m_OKButton;
+	wxButton*     m_bDelete;
+	wxButton*     m_bDeleteAll;
 
     wxStaticBoxSizer* m_pListSizer;
     wxScrolledWindow *itemDialog1;
 
 	wxStaticBox* itemStaticBoxSizer14Static;
+
+	wxString portName;
+	Dlg* theDialog;
 
 //private:
 	TideTable();

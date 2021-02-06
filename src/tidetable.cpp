@@ -50,6 +50,8 @@ IMPLEMENT_DYNAMIC_CLASS( TideTable, wxDialog )
 BEGIN_EVENT_TABLE( TideTable, wxDialog )
   
   EVT_BUTTON(ID_ROUTEPROP_OK, TideTable::OnRoutepropOkClick)
+  EVT_BUTTON(ID_ROUTEPROP_DELETE, TideTable::OnRoutepropDeleteClick)
+  EVT_BUTTON(ID_ROUTEPROP_DELETE_ALL, TideTable::OnRoutepropDeleteAllClick)
  
 END_EVENT_TABLE()
 
@@ -138,9 +140,20 @@ void TideTable::CreateControls()
       
       m_OKButton = new wxButton( this, ID_ROUTEPROP_OK, _("OK"), wxDefaultPosition,
       wxDefaultSize, 0 );
-      itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 1);
-      m_OKButton->SetDefault();
-      
+
+      itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 1);
+      //m_OKButton->SetDefault();
+
+	  m_bDelete = new wxButton(this, ID_ROUTEPROP_DELETE, _("Delete"), wxDefaultPosition,
+      wxDefaultSize, 0);
+
+	  itemBoxSizer16->Add(m_bDelete, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 1);
+
+	  m_bDeleteAll = new wxButton(this, ID_ROUTEPROP_DELETE_ALL, _("Delete ALL"), wxDefaultPosition,
+		  wxDefaultSize, 0);
+
+	  itemBoxSizer16->Add(m_bDeleteAll, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 1);
+
       //      To correct a bug in MSW commctl32, we need to catch column width drag events, and do a Refresh()
       //      Otherwise, the column heading disappear.....
       //      Does no harm for GTK builds, so no need for conditional
@@ -160,13 +173,32 @@ void TideTable::CreateControls()
 
  }
       
-	  void TideTable::SetDialogTitle(const wxString & title)
+void TideTable::SetDialogTitle(const wxString & title)
 {
     SetTitle(title);
 }
 
-	  void TideTable::OnRoutepropOkClick(wxCommandEvent& event)
+void TideTable::OnRoutepropOkClick(wxCommandEvent& event)
 {	
 	Hide();
+	event.Skip();
+}
+
+void TideTable::OnRoutepropDeleteClick(wxCommandEvent& event)
+{
+	wxString sl = portName;
+	//wxMessageBox(sl);	
+	theDialog->RemoveSavedPort(sl);
+	Hide();
+
+	event.Skip();
+}
+
+
+void TideTable::OnRoutepropDeleteAllClick(wxCommandEvent& event)
+{	
+	theDialog->RemoveAllSavedPorts();
+	Hide();
+
 	event.Skip();
 }
