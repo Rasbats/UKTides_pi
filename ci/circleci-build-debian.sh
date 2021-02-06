@@ -26,4 +26,4 @@ sudo apt-get install \
 
 # Latest pip 21.0.0 is broken:
 python3 -m pip install --force-reinstall pip==20.3.4
-ppython3 -m pip install --user -q cloudsmith-cli cryptography cmake
+python3 -m pip install --user -q cloudsmith-cli cryptography cmake
