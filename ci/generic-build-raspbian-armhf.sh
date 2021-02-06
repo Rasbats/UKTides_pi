@@ -56,9 +56,9 @@ rm -f build.sh
 # Install cloudsmith-cli,  required by upload.sh.
 pyenv versions | sed 's/*//' | awk '{print $1}' | tail -1 \
     > $HOME/.python-version
-python3 -m pip install --upgrade pip
-python3 -m pip install --user cloudsmith-cli
-python3 -m pip install --user cryptography
+# Latest pip 21.0.0 is broken:
+python3 -m pip install --force-reinstall pip==20.3.4
+python3 -m pip install --user -q cloudsmith-cli cryptography cmake
 
 # python install scripts in ~/.local/bin, teach upload.sh to use it in PATH:
 echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.uploadrc
