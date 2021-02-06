@@ -48,18 +48,14 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 	this->Fit();
     	dbg=false; //for debug output set to true
 
-	b_clearSavedIcons = false;
-	b_clearAllIcons = false;
-
-
 	wxFileName fn;
 	wxString tmp_path;
 
 	LoadTidalEventsFromXml();
 	//RemoveOldDownloads();
 
-	//b_clearSavedIcons = false;
-	//b_clearAllIcons = false;
+	b_clearSavedIcons = false;
+	b_clearAllIcons = false;
 	
 }
 
@@ -94,6 +90,8 @@ void Dlg::SetViewPort(PlugIn_ViewPort *vp)
 
 bool Dlg::RenderGLukOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 {
+	//if (mySavedPorts.size() == 0) return false;
+	
 	m_pdc = NULL;  // inform lower layers that this is OpenGL render
 
 	if (!b_clearAllIcons) {
@@ -112,7 +110,7 @@ bool Dlg::RenderGLukOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 
 bool Dlg::RenderukOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 {
-
+	//if (mySavedPorts.size() == 0) return false;
 #if wxUSE_GRAPHICS_CONTEXT
 	wxMemoryDC *pmdc;
 	pmdc = wxDynamicCast(&dc, wxMemoryDC);
@@ -395,7 +393,7 @@ wxImage &Dlg::DrawGLTextString(wxString myText) {
 
 	mdc.SetBrush(*wxTRANSPARENT_BRUSH);
 	mdc.SetTextForeground(m_text_color);
-	mdc.SetTextBackground(wxTRANSPARENT);
+	//mdc.SetTextBackground(wxTRANSPARENT);
 
 	int xd = 0;
 	int yd = 0;
@@ -570,6 +568,9 @@ void Dlg::OnGetSavedTides(wxCommandEvent& event) {
 	myLat = 0;
 	myLon = 0;
 
+	if (mySavedPorts.size() != 0) {
+		mySavedPorts.clear();
+	}
 	
 	LoadTidalEventsFromXml();
 
@@ -577,9 +578,6 @@ void Dlg::OnGetSavedTides(wxCommandEvent& event) {
 		wxMessageBox(_("No locations are available, please download and select a tidal station"));
 		return;
 	}
-
-	b_clearAllIcons = true;
-	b_clearSavedIcons = false;
 
 	RequestRefresh(m_parent);  //put the saved port icons back
 
@@ -623,7 +621,7 @@ void Dlg::OnGetSavedTides(wxCommandEvent& event) {
 
 	
 	b_clearSavedIcons = false;
-	//b_clearAllIcons = true;	
+	b_clearAllIcons = true;	
 
 	GetParent()->Refresh();
 
@@ -814,7 +812,7 @@ void Dlg::OnShow(void)
 		wxString label = m_titlePortName + _("      (Times are UTC)  ") + _(" (Height in metres)");
 		tidetable->itemStaticBoxSizer14Static->SetLabel(label);
 
-		tidetable->theDialog = this;
+		//tidetable->theDialog = this;
 
 		wxString Event;
 		wxString EventDT;
@@ -849,9 +847,9 @@ void Dlg::OnShow(void)
 		tidetable->Layout();
 		tidetable->Show();
 
-
+		tidetable->theDialog = this;
 		
-		GetParent()->Refresh();
+		
 
 }
 
@@ -910,6 +908,7 @@ void Dlg::OnShowSavedPortTides(wxString thisPortId) {
 	
 	tidetable->theDialog = this;
 
+	
 }
 
 
@@ -1124,7 +1123,8 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 
 list<myPort>Dlg::LoadTidalEventsFromXml()
 {
-	mySavedPorts.clear();
+	
+	list<myPort>myEmptyPorts;
 
 	myPort thisPort;
 	TidalEvent thisEvent;
@@ -1137,10 +1137,15 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 	tidal_events_path = StandardPath();
     wxString filename = tidal_events_path + "/tidalevents.xml";
 
+	
 	/* ensure the directory exists */
 	wxFileName fn;
 	if (!wxDirExists(tidal_events_path)) {
 		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+	}
+	
+	if (!wxFileExists(filename)) {
+		return myEmptyPorts;
 	}
 
 	list<TidalEvent> listEvents;
@@ -1185,6 +1190,9 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 			}
 		}
 	}
+
+	b_clearSavedIcons = false;
+	b_clearAllIcons = false;
 
 	
 	return mySavedPorts;

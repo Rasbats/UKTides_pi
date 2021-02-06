@@ -182,12 +182,14 @@ bool UKTides_pi::DeInit(void)
 
 int UKTides_pi::GetAPIVersionMajor()
 {
-    return MY_API_VERSION_MAJOR;
+      return atoi(API_VERSION);
 }
 
 int UKTides_pi::GetAPIVersionMinor()
 {
-    return MY_API_VERSION_MINOR;
+      std::string v(API_VERSION);
+    size_t dotpos = v.find('.');
+    return atoi(v.substr(dotpos + 1).c_str());
 }
 
 int UKTides_pi::GetPlugInVersionMajor()
@@ -276,14 +278,10 @@ void UKTides_pi::OnToolbarToolCallback(int id)
 	  m_bShowUKTides = !m_bShowUKTides;	  
 
       //    Toggle dialog? 
-      if(m_bShowUKTides) {
-		  m_pDialog->b_clearSavedIcons = false;
-		  m_pDialog->b_clearAllIcons = false;
+      if(m_bShowUKTides) {		  
           m_pDialog->Show();         
 	  }
-	  else {
-		  m_pDialog->b_clearSavedIcons = true;
-		  m_pDialog->b_clearAllIcons = true;
+	  else {		 
 		  m_pDialog->Hide();
 	  }
       // Toggle is handled by the toolbar but we must keep plugin manager b_toggle updated
