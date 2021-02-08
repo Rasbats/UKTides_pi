@@ -93,8 +93,7 @@ public:
       void SetCalculatorDialogHeight    (int x){ m_route_dialog_height = x;};      
 	  bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 	  bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
-	  
-
+	  void OnUKTidesDialogClose();
 	  double GetCursorLon(void) { return m_cursor_lon; }
 	  double GetCursorLat(void) { return m_cursor_lat; }
 	  

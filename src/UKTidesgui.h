@@ -42,6 +42,7 @@ class DlgDef : public wxFrame
 		wxChoice* m_choice3;
 
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnDownload( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnGetSavedTides( wxCommandEvent& event ) { event.Skip(); }
 		virtual void DoRemovePortIcons( wxCommandEvent& event ) { event.Skip(); }
@@ -54,7 +55,7 @@ class DlgDef : public wxFrame
 		wxButton* m_buttonSaved;
 		wxButton* m_buttonSaved1;
 
-		DlgDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("UK Tides"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxTAB_TRAVERSAL );
+		DlgDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("UK Tides"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxCLOSE_BOX|wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
 
 		~DlgDef();
 

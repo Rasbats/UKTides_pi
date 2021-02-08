@@ -76,6 +76,7 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( DlgDef::OnClose ) );
 	m_buttonDownload->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnDownload ), NULL, this );
 	m_buttonSaved->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnGetSavedTides ), NULL, this );
 	m_buttonSaved1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::DoRemovePortIcons ), NULL, this );
@@ -84,6 +85,7 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 DlgDef::~DlgDef()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( DlgDef::OnClose ) );
 	m_buttonDownload->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnDownload ), NULL, this );
 	m_buttonSaved->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnGetSavedTides ), NULL, this );
 	m_buttonSaved1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::DoRemovePortIcons ), NULL, this );

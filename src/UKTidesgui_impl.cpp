@@ -1019,7 +1019,10 @@ wxString Dlg::ProcessDate(wxString myLongDate) {
 
 }
 
-
+void Dlg::OnClose(wxCloseEvent& event)
+{
+	plugin->OnUKTidesDialogClose();
+}
 
 
 wxString Dlg::StandardPath()

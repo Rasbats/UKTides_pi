@@ -296,6 +296,20 @@ void UKTides_pi::OnToolbarToolCallback(int id)
       RequestRefresh(m_parent_window); // refresh main window
 }
 
+void UKTides_pi::OnUKTidesDialogClose()
+{
+	m_pDialog->b_clearSavedIcons = true;
+	m_pDialog->b_clearAllIcons = true;
+	m_bShowUKTides = false;
+    SetToolbarItemState( m_leftclick_tool_id, m_bShowUKTides );
+    m_pDialog->Hide();
+    SaveConfig();
+
+    RequestRefresh(m_parent_window); // refresh main window
+
+}
+
+
 bool UKTides_pi::LoadConfig(void)
 {
       wxFileConfig *pConf = (wxFileConfig *)m_pconfig;

@@ -160,6 +160,8 @@ private:
 	wxString ProcessDate(wxString myLongDate);
 	
 	void OnShowSavedPortTides(wxString thisPortId);
+	void OnClose( wxCloseEvent& event );
+
 	
     double lat1, lon1, lat2, lon2;
     bool error_found;
