@@ -48,15 +48,11 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 	this->Fit();
     	dbg=false; //for debug output set to true
 
-	wxFileName fn;
-	wxString tmp_path;
-
 	LoadTidalEventsFromXml();
-	//RemoveOldDownloads();
+	RemoveOldDownloads();
 
-	b_clearSavedIcons = false;
-	b_clearAllIcons = false;
-	
+	b_clearAllIcons = true;
+	b_clearSavedIcons = true;
 }
 
 Dlg::~Dlg()
@@ -90,8 +86,6 @@ void Dlg::SetViewPort(PlugIn_ViewPort *vp)
 
 bool Dlg::RenderGLukOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 {
-	//if (mySavedPorts.size() == 0) return false;
-	
 	m_pdc = NULL;  // inform lower layers that this is OpenGL render
 
 	if (!b_clearAllIcons) {
@@ -110,7 +104,7 @@ bool Dlg::RenderGLukOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 
 bool Dlg::RenderukOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 {
-	//if (mySavedPorts.size() == 0) return false;
+	
 #if wxUSE_GRAPHICS_CONTEXT
 	wxMemoryDC *pmdc;
 	pmdc = wxDynamicCast(&dc, wxMemoryDC);
@@ -142,6 +136,8 @@ bool Dlg::RenderukOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 	bool bforce_redraw_icons, bool bdraw_mono_for_mask)
 {	
+	
+	if (myports.size() == 0) return;
 	
 	double plat = 0.0;
 	double plon = 0.0;
@@ -182,6 +178,9 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 	bool bforce_redraw_icons, bool bdraw_mono_for_mask)
 {
+	
+	if (mySavedPorts.size() == 0) return;
+	
 	double plat = 0.0;
 	double plon = 0.0;
 	myPort outPort;
@@ -393,7 +392,7 @@ wxImage &Dlg::DrawGLTextString(wxString myText) {
 
 	mdc.SetBrush(*wxTRANSPARENT_BRUSH);
 	mdc.SetTextForeground(m_text_color);
-	//mdc.SetTextBackground(wxTRANSPARENT);
+	mdc.SetTextBackground(wxTRANSPARENT);
 
 	int xd = 0;
 	int yd = 0;
@@ -554,6 +553,9 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 	SetCanvasContextMenuItemViz(plugin->m_position_menu_id, true);
 	fileData.Close();
 
+	b_clearSavedIcons = true;
+	b_clearAllIcons = false;
+
 	RequestRefresh(m_parent);
 	value.clear();
 
@@ -681,14 +683,12 @@ void Dlg::DoRemovePortIcons(wxCommandEvent& event) {
 	
 	switch (KeepSavedIcons.ShowModal()) {
 		case wxID_YES: {			
-			//myports.clear();
 			b_clearSavedIcons = false;
 			b_clearAllIcons = true;
 			RequestRefresh(m_parent);
 			break; 
 		}
 		case wxID_NO: {
-			//mySavedPorts.clear();
 			b_clearSavedIcons = true;
 			b_clearAllIcons = true;
 			RequestRefresh(m_parent);
@@ -1020,10 +1020,7 @@ wxString Dlg::ProcessDate(wxString myLongDate) {
 }
 
 
-void Dlg::OnClose(wxCloseEvent& event)
-{
-	plugin->OnUKTidesDialogClose();
-}
+
 
 wxString Dlg::StandardPath()
 {
@@ -1104,20 +1101,21 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 			Port->LinkEndChild(t);
 		}
 	}
-
-	wxString filename = "tidalevents.xml";
+	
 	wxString tidal_events_path;
 
 	tidal_events_path = StandardPath();
 
-    /* ensure the directory exists */
-    wxFileName fn;
+	/* ensure the directory exists */
+	wxFileName fn;
 
-    if (!wxDirExists(tidal_events_path)) {
-        fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
-    }
+	if (!wxDirExists(tidal_events_path)) {
+		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+	}
+  
+	wxString filename = tidal_events_path + "/tidalevents.xml";
 
-	if (!doc.SaveFile(tidal_events_path + "/" + filename))
+	if (!doc.SaveFile(filename))
 		wxLogMessage(_("UKTides") + wxString(": ") + _("Failed to save xml file: ") + filename);
 }
 
@@ -1130,7 +1128,6 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 	TidalEvent thisEvent;
 
 	TiXmlDocument doc;
-	//wxString name;
 
 	wxString tidal_events_path;
 
@@ -1142,9 +1139,10 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 	wxFileName fn;
 	if (!wxDirExists(tidal_events_path)) {
 		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+		return myEmptyPorts;
 	}
 	
-	if (!wxFileExists(filename)) {
+	if (!wxFileExists(filename)) {		
 		return myEmptyPorts;
 	}
 
@@ -1152,8 +1150,10 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 
 	SetTitle(_("Tidal Events"));
 
-	if (!doc.LoadFile(filename.mb_str()))
-		wxLogMessage(_("No UK tide locations available"));
+	if (!doc.LoadFile(filename.mb_str())) {
+		wxMessageBox(_("No UK tide locations available"));
+		return myEmptyPorts;
+	}
 	else {
 		TiXmlHandle root(doc.RootElement());
 
@@ -1191,10 +1191,6 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 		}
 	}
 
-	b_clearSavedIcons = false;
-	b_clearAllIcons = false;
-
-	
 	return mySavedPorts;
 
 }
@@ -1219,7 +1215,12 @@ wxString Dlg::GetDateStringNow() {
 
 }
 
-void Dlg::RemoveOldDownloads() {
+void Dlg::RemoveOldDownloads( ) {
+	
+	if (mySavedPorts.size() == 0) {				
+		return;
+	}
+	
 	wxDateTime dtn, ddt;
 	wxString sdt, sddt;
 	wxTimeSpan DaySpan;
@@ -1236,8 +1237,10 @@ void Dlg::RemoveOldDownloads() {
 			mySavedPorts.erase((it));
 		}
 	}
-
+	
 	SaveTidalEventsToXml(mySavedPorts);
+	GetParent()->Refresh();
+
 }
 
 void Dlg::RemoveSavedPort(wxString myStation) {

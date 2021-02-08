@@ -126,11 +126,12 @@ public:
 		void OnTest(wxString thePort);
 		void RemoveSavedPort(wxString myStation);
 		void RemoveAllSavedPorts();
+		PlugIn_ViewPort  *m_vp;
 
 private:
 	
 	
-	PlugIn_ViewPort  *m_vp;
+	
 
 	wxDC *m_pdc;
 	wxGraphicsContext *m_gdc;
@@ -159,8 +160,6 @@ private:
 	wxString ProcessDate(wxString myLongDate);
 	
 	void OnShowSavedPortTides(wxString thisPortId);
-
-	void OnClose( wxCloseEvent& event );
 	
     double lat1, lon1, lat2, lon2;
     bool error_found;

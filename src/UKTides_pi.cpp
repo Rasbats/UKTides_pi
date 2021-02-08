@@ -128,17 +128,17 @@ int UKTides_pi::Init(void)
       LoadConfig();
 
       //    This PlugIn needs a toolbar icon, so request its insertion
-	if(m_bUKTidesShowIcon)
-     
-#ifdef PLUGIN_USE_SVG
-	m_leftclick_tool_id = InsertPlugInToolSVG("UKTides", _svg_uktides, _svg_uktides, _svg_uktides_toggled,
-		wxITEM_CHECK, _("UKTides"), "", NULL, UKTIDES_TOOL_POSITION, 0, this);
-#else
-	 m_leftclick_tool_id  = InsertPlugInTool("", _img_uktides, _img_uktides, wxITEM_CHECK,
-            _("UKTides"), "", NULL,
-             UKTIDES_TOOL_POSITION, 0, this);
-#endif
+	  if (m_bUKTidesShowIcon) {
 
+#ifdef PLUGIN_USE_SVG
+		  m_leftclick_tool_id = InsertPlugInToolSVG("UKTides", _svg_uktides, _svg_uktides, _svg_uktides_toggled,
+			  wxITEM_CHECK, _("UKTides"), "", NULL, UKTIDES_TOOL_POSITION, 0, this);
+#else
+		  m_leftclick_tool_id = InsertPlugInTool("", _img_uktides, _img_uktides, wxITEM_CHECK,
+			  _("UKTides"), "", NULL,
+			  UKTIDES_TOOL_POSITION, 0, this);
+#endif
+	  }
 	wxMenu dummy_menu;
 	m_position_menu_id = AddCanvasContextMenuItem
 
@@ -187,7 +187,7 @@ int UKTides_pi::GetAPIVersionMajor()
 
 int UKTides_pi::GetAPIVersionMinor()
 {
-      std::string v(API_VERSION);
+    std::string v(API_VERSION);
     size_t dotpos = v.find('.');
     return atoi(v.substr(dotpos + 1).c_str());
 }
@@ -279,10 +279,15 @@ void UKTides_pi::OnToolbarToolCallback(int id)
 
       //    Toggle dialog? 
       if(m_bShowUKTides) {		  
-          m_pDialog->Show();         
+          m_pDialog->Show();
+		  m_pDialog->b_clearAllIcons = false;
+		  m_pDialog->b_clearSavedIcons = false;
+
 	  }
 	  else {		 
 		  m_pDialog->Hide();
+		  m_pDialog->b_clearAllIcons = true;
+		  m_pDialog->b_clearSavedIcons = true;
 	  }
       // Toggle is handled by the toolbar but we must keep plugin manager b_toggle updated
       // to actual status to ensure correct status upon toolbar rebuild
@@ -331,26 +336,12 @@ bool UKTides_pi::SaveConfig(void)
             return false;
 }
 
-void UKTides_pi::OnUKTidesDialogClose()
-{
-	m_pDialog->b_clearSavedIcons = true;
-	m_pDialog->b_clearAllIcons = true;
-	m_bShowUKTides = false;
-    SetToolbarItemState( m_leftclick_tool_id, m_bShowUKTides );
-    m_pDialog->Hide();
-    SaveConfig();
-
-    RequestRefresh(m_parent_window); // refresh main window
-
-}
-
-
 bool UKTides_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 {
 	if (!m_pDialog)
 		return false;
 
-	m_pDialog->SetViewPort(vp);
+	//m_pDialog->SetViewPort(vp);
 	m_pDialog->RenderukOverlay(dc, vp);
 	return true;
 }
@@ -360,7 +351,7 @@ bool UKTides_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 	if (!m_pDialog) 
 		return false;
 
-	m_pDialog->SetViewPort(vp);
+	//m_pDialog->SetViewPort(vp);
 	m_pDialog->RenderGLukOverlay(pcontext, vp);
 	return true;
 }

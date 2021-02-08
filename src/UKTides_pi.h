@@ -91,7 +91,6 @@ public:
       void SetCalculatorDialogY         (int x){ m_route_dialog_y = x;};
       void SetCalculatorDialogWidth     (int x){ m_route_dialog_width = x;};
       void SetCalculatorDialogHeight    (int x){ m_route_dialog_height = x;};      
-	  void OnUKTidesDialogClose();
 	  bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 	  bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
 	  
