@@ -10,6 +10,7 @@ debian-steps: &debian-steps
     - run: python3 ci/git-push
 
 jobs:
+
   build-flatpak:
     machine:
       image: ubuntu-1604:201903-01
@@ -119,9 +120,7 @@ std-filters: &std-filters
 workflows:
   version: 2
   build_all:
-    jobs:
-      - build-mingw:
-          <<: *std-filters
+    jobs:      
 
       - build-flatpak:
           <<: *std-filters
