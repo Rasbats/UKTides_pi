@@ -785,10 +785,13 @@ void Dlg::getHWLW(string id)
 
 	root2.clear();
 
-	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
+	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
 
 		if ((*it).Id == id) {
-			mySavedPorts.erase((it));
+			mySavedPorts.erase(it);
+		}
+		else {
+			++it;
 		}
 	}
 
