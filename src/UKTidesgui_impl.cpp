@@ -1092,8 +1092,7 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 	wxString filename = tidal_events_path + "/tidalevents.xml";
 
 
-	if (myPorts.size() == 0) {
-		wxMessageBox("There are no ports to save");
+	if (myPorts.size() == 0) {		
 		wxTextFile myXML(filename);
 		if(!myXML.Exists())
 		   return;
