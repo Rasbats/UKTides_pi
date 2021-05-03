@@ -32,6 +32,7 @@
 
 #include <wx/ffile.h>
 #include <wx/filefn.h>
+#include <wx/textfile.h>
 #include <wx/url.h>
 
 #include <wx/glcanvas.h>
@@ -1077,9 +1078,29 @@ myPort Dlg::SavePortTidalEvents(list<TidalEvent>myEvents, string portId)
 void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 {
 
+	wxString tidal_events_path;
+
+	tidal_events_path = StandardPath();
+
+	/* ensure the directory exists */
+	wxFileName fn;
+
+	if (!wxDirExists(tidal_events_path)) {
+		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+	}
+  
+	wxString filename = tidal_events_path + "/tidalevents.xml";
+
+
 	if (myPorts.size() == 0) {
 		wxMessageBox("There are no ports to save");
-		return;
+		wxTextFile myXML(filename);
+		if(!myXML.Exists())
+		   return;
+		myXML.Open();
+		myXML.Clear();
+		myXML.Write();
+		return;             		
 	}
 	
 	TiXmlDocument doc;
@@ -1113,19 +1134,7 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 		}
 	}
 	
-	wxString tidal_events_path;
-
-	tidal_events_path = StandardPath();
-
-	/* ensure the directory exists */
-	wxFileName fn;
-
-	if (!wxDirExists(tidal_events_path)) {
-		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
-	}
-  
-	wxString filename = tidal_events_path + "/tidalevents.xml";
-
+	
 	if (!doc.SaveFile(filename))
 		wxLogMessage(_("UKTides") + wxString(": ") + _("Failed to save xml file: ") + filename);
 }
