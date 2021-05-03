@@ -1077,6 +1077,11 @@ myPort Dlg::SavePortTidalEvents(list<TidalEvent>myEvents, string portId)
 void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 {
 
+	if (myPorts.size() == 0) {
+		wxMessageBox("There are no ports to save");
+		return;
+	}
+	
 	TiXmlDocument doc;
 	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "utf-8", "");
 	doc.LinkEndChild(decl);
