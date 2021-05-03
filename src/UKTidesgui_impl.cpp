@@ -1256,15 +1256,20 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 		return;
 	}
 
-	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
-		
-		if ((*it).Name == myStation) {
-			mySavedPorts.erase((it));
-		} else {
-		  it++;
-		}	
+	if (mySavedPorts.size() == 1) {
+		mySavedPorts.clear();
 	}
+	else {
+		for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
 
+			if ((*it).Name == myStation) {
+				mySavedPorts.erase(it);
+			}
+			else {
+				it++;
+			}
+		}
+	}
 	SaveTidalEventsToXml(mySavedPorts);
 	GetParent()->Refresh();
 }
