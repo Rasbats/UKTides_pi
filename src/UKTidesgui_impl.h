@@ -47,10 +47,15 @@
 #include <list>
 #include <vector>
 
-#if __APPLE__
-#include <gl.h>
+#ifdef __OCPN__ANDROID__
+#include <qopengl.h>
+#include "gl_private.h"
+#elif defined(__APPLE__)
+#include "OpenGL/gl.h"
+#include "OpenGL/glu.h"
 #else
-#include <GL/gl.h>
+#include "GL/gl.h"
+#include "GL/glext.h"
 #endif
 
 using namespace std;
