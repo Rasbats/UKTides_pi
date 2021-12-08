@@ -43,19 +43,21 @@
 #include "json/reader.h"
 #include "json/writer.h"
 
+#include "ocpn_plugin.h"
+
+
 #include <map>
 #include <list>
 #include <vector>
 
 #ifdef __OCPN__ANDROID__
 #include <qopengl.h>
-#elif defined(__APPLE__)
-#include "OpenGL/gl.h"
-#include "OpenGL/glu.h"
-#else
-#include "GL/gl.h"
-#include "GL/glext.h"
+#include "gl_private.h"
 #endif
+
+class PlugIn_ViewPort;
+class wxBoundingBox;
+class piDC;
 
 using namespace std;
 
@@ -111,8 +113,7 @@ public:
 		myPort mySavedPort;
 
 		void SetViewPort(PlugIn_ViewPort *vp);
-		bool RenderGLukOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
-		bool RenderukOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+		bool RenderOverlay(piDC &dc, PlugIn_ViewPort &vp);
 		void DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList, bool bforce_redraw_icons, bool bdraw_mono_for_mask);
 		void DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			bool bforce_redraw_icons, bool bdraw_mono_for_mask);
@@ -130,7 +131,11 @@ public:
 		void OnTest(wxString thePort);
 		void RemoveSavedPort(wxString myStation);
 		void RemoveAllSavedPorts();
+		
+		PlugIn_ViewPort  *vp;
 		PlugIn_ViewPort  *m_vp;
+
+		piDC *m_dc;
 
 private:
 	

@@ -147,6 +147,7 @@ int UKTides_pi::Init(void)
 
      m_pDialog = NULL;	 
 	
+	
 
       return (WANTS_OVERLAY_CALLBACK |
               WANTS_OPENGL_OVERLAY_CALLBACK |		      
@@ -269,8 +270,9 @@ void UKTides_pi::OnToolbarToolCallback(int id)
 			else
 				wxLogMessage(_("UKTides:: station bitmap has NOT been loaded"));	
 
-			
-			
+			m_pDialog->b_clearAllIcons = false;
+			m_pDialog->b_clearSavedIcons = false;
+						
       }
 
 	  m_pDialog->Fit();
@@ -355,8 +357,8 @@ bool UKTides_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 	if (!m_pDialog)
 		return false;
 
-	//m_pDialog->SetViewPort(vp);
-	m_pDialog->RenderukOverlay(dc, vp);
+	piDC pidc(dc);
+	m_pDialog->RenderOverlay(pidc, *vp);
 	return true;
 }
 
@@ -366,7 +368,11 @@ bool UKTides_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 		return false;
 
 	//m_pDialog->SetViewPort(vp);
-	m_pDialog->RenderGLukOverlay(pcontext, vp);
+	piDC piDC;
+    glEnable( GL_BLEND );
+    piDC.SetVP(vp);
+
+	m_pDialog->RenderOverlay(piDC, *vp);
 	return true;
 }
 

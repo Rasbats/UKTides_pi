@@ -41,8 +41,11 @@
 #include "icons.h"
 #include "UKTidesgui_impl.h"
 
+#include "pidc.h"
+
 #include "config.h"
 
+class piDC;
 class Dlg;
 
 //----------------------------------------------------------------------------------------------------------

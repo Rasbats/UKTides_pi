@@ -38,8 +38,72 @@
 #include <wx/glcanvas.h>
 #include <wx/graphics.h>
 
+#include "bbox.h"
+#include "pidc.h"
+
+#ifdef __WXOSX__
+# include <OpenGL/OpenGL.h>
+# include <OpenGL/gl3.h>
+#endif
+
+#ifdef __OCPN__ANDROID__
+#include <qopengl.h>
+#include "gl_private.h"
+#endif
+
+#ifdef USE_GLES2
+#include "GLES2/gl2.h"
+#endif
+
+
+
 class Position;
 class myPort;
+
+static int texture_format;
+static bool glQueried = false;
+
+static GLboolean QueryExtension( const char *extName )
+{
+    /*
+     ** Search for extName in the extensions string. Use of strstr()
+     ** is not sufficient because extension names can be prefixes of
+     ** other extension names. Could use strtok() but the constant
+     ** string returned by glGetString might be in read-only memory.
+     */
+    char *p;
+    char *end;
+    int extNameLen;
+
+    extNameLen = strlen( extName );
+
+    p = (char *) glGetString( GL_EXTENSIONS );
+    if( NULL == p ) {
+        return GL_FALSE;
+    }
+
+    end = p + strlen( p );
+
+    while( p < end ) {
+        int n = strcspn( p, " " );
+        if( ( extNameLen == n ) && ( strncmp( extName, p, n ) == 0 ) ) {
+            return GL_TRUE;
+        }
+        p += ( n + 1 );
+    }
+    return GL_FALSE;
+}
+
+#if defined(__WXMSW__)
+#define systemGetProcAddress(ADDR) wglGetProcAddress(ADDR)
+#elif defined(__WXOSX__)
+#include <dlfcn.h>
+#define systemGetProcAddress(ADDR) dlsym( RTLD_DEFAULT, ADDR)
+#elif defined(__OCPN__ANDROID__)
+#define systemGetProcAddress(ADDR) eglGetProcAddress(ADDR)
+#else
+#define systemGetProcAddress(ADDR) glXGetProcAddress((const GLubyte*)ADDR)
+#endif
 
 Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 	: DlgDef(parent),
@@ -73,9 +137,7 @@ void Dlg::OnInformation(wxCommandEvent& event)
 	fn.SetFullName("UKTides.html");
 	wxString infolocation = fn.GetFullPath();
 
-
 	wxLaunchDefaultBrowser("file:///" + infolocation);
-
 }
 
 void Dlg::SetViewPort(PlugIn_ViewPort *vp)
@@ -85,60 +147,64 @@ void Dlg::SetViewPort(PlugIn_ViewPort *vp)
 	m_vp = new PlugIn_ViewPort(*vp);
 }
 
-bool Dlg::RenderGLukOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
-{
-	m_pdc = NULL;  // inform lower layers that this is OpenGL render
 
-	if (!b_clearAllIcons) {
-		if (myports.size() != 0) {
-			DrawAllStationIcons(vp, false, false, false);
-		}
-	}
-	if (!b_clearSavedIcons) {
-		if (mySavedPorts.size() != 0) {
-			DrawAllSavedStationIcons(vp, false, false, false);
-		}
-	}
-		
-	return true;
-}
-
-bool Dlg::RenderukOverlay(wxDC &dc, PlugIn_ViewPort *vp)
+bool Dlg::RenderOverlay(piDC &dc, PlugIn_ViewPort &vp)
 {
-	
-#if wxUSE_GRAPHICS_CONTEXT
-	wxMemoryDC *pmdc;
-	pmdc = wxDynamicCast(&dc, wxMemoryDC);
-	wxGraphicsContext *pgc = wxGraphicsContext::Create(*pmdc);
-	m_gdc = pgc;
-	m_pdc = &dc;
-#else
-	m_pdc = &dc;
+	m_dc = &dc;	
+
+	if (!dc.GetDC()) {
+		if (!glQueried) {
+			
+			glQueried = true;
+		}
+#ifndef USE_GLSL
+		glPushAttrib(GL_LINE_BIT | GL_ENABLE_BIT | GL_HINT_BIT); //Save state
+
+		//      Enable anti-aliased lines, at best quality
+		glEnable(GL_LINE_SMOOTH);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 #endif
+		glEnable(GL_BLEND);
+	}
 
-	m_pdc = &dc;
+	wxFont font(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+	m_dc->SetFont(font);
+
+	wxColour myColour = wxColour("BLACK");
 	
 	if (!b_clearAllIcons) {
 		if (myports.size() != 0) {
-			DrawAllStationIcons(vp, false, false, false);
+			DrawAllStationIcons(&vp, false, false, false);
 		}
 	}
 
 	if (!b_clearSavedIcons) {
 		if (mySavedPorts.size() != 0) {
-			DrawAllSavedStationIcons(vp, false, false, false);
+			DrawAllSavedStationIcons(&vp, false, false, false);
 		}
 	}
 	
-	return true;
+    return true;
 }
-
 
 void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 	bool bforce_redraw_icons, bool bdraw_mono_for_mask)
 {	
 	
 	if (myports.size() == 0) return;
+
+	wxColour text_color;
+    GetGlobalColor( _T ("UINFD" ), &text_color );
+    if (text_color != m_text_color) {
+       // color changed, invalid cache
+       m_text_color = text_color;
+       m_labelCacheText.clear();
+    }
+
+	wxFont font(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+	m_dc->SetFont(font);
 	
 	double plat = 0.0;
 	double plon = 0.0;
@@ -149,37 +215,35 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 		plat = (*it).coordLat;
 		plon = (*it).coordLon;
 		outPort.Name = (*it).Name;
-
-		wxPoint r;
-		GetCanvasPixLL(BBox, &r, plat, plon);
-
 		int pixxc, pixyc;
 		wxPoint cpoint;
-		GetCanvasPixLL(BBox, &cpoint, plat, plon);
-		pixxc = cpoint.x;
-		pixyc = cpoint.y;
 
-		DrawOLBitmap(m_stationBitmap, pixxc, pixyc, false);
+		wxBoundingBox LLBBox( BBox->lon_min, BBox->lat_min , BBox->lon_max, BBox->lat_max );
+		if (LLBBox.PointInBox(plon, plat, 0)) {
+			GetCanvasPixLL(BBox, &cpoint, plat, plon);
+			pixxc = cpoint.x;
+			pixyc = cpoint.y;
 
-		int textShift = -15;
+			m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
 
-		if (!m_pdc) {
+			int textShift = -15;
 
-			DrawGLLabels(this, m_pdc, BBox,
-				DrawGLTextString(outPort.Name), plat, plon, textShift);
+			if (!m_dc) {
+
+				//DrawGLLabels(this, m_pdc, BBox,
+					//DrawGLTextString(outPort.Name), plat, plon, textShift);
+			}
+			else {			
+				wxString name = outPort.Name;
+				m_dc->DrawText(name, pixxc, pixyc + textShift);
+			}
 		}
-		else {
-
-			m_pdc->DrawText(outPort.Name, pixxc, pixyc + textShift);
-		}
-		
 	}
 }
 
 void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 	bool bforce_redraw_icons, bool bdraw_mono_for_mask)
 {
-	
 	if (mySavedPorts.size() == 0) return;
 	
 	double plat = 0.0;
@@ -192,239 +256,31 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 		plon = (*it).coordLon;
 		outPort.Name = (*it).Name;
 
-		wxPoint r;
-		GetCanvasPixLL(BBox, &r, plat, plon);
-
 		int pixxc, pixyc;
 		wxPoint cpoint;
-		GetCanvasPixLL(BBox, &cpoint, plat, plon);
-		pixxc = cpoint.x;
-		pixyc = cpoint.y;
 
-		DrawOLBitmap(m_stationBitmap, pixxc, pixyc, false);
+		wxBoundingBox LLBBox( BBox->lon_min, BBox->lat_min , BBox->lon_max, BBox->lat_max );
+		if (LLBBox.PointInBox(plon, plat, 0)) {
 
-		int textShift = -15;
+			GetCanvasPixLL(BBox, &cpoint, plat, plon);
+			pixxc = cpoint.x;
+			pixyc = cpoint.y;
 
-		if (!m_pdc) {
+			m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
 
-			DrawGLLabels(this, m_pdc, BBox,
-				DrawGLTextString(outPort.Name), plat, plon, textShift);
-		}
-		else {
-			m_pdc->DrawText(outPort.Name, pixxc, pixyc + textShift);
+			int textShift = -15;
+
+			if (!m_dc) {
+
+				//DrawGLLabels(this, m_pdc, BBox,
+					//DrawGLTextString(outPort.Name), plat, plon, textShift);
+			}
+			else {
+				m_dc->DrawText(outPort.Name, pixxc, pixyc + textShift);
+			}
 		}
 	}	
 }
-
-	
-
-
-
-void Dlg::DrawOLBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask)
-{
-	wxBitmap bmp;
-	if (x < 0 || y < 0) {
-		int dx = (x < 0 ? -x : 0);
-		int dy = (y < 0 ? -y : 0);
-		int w = bitmap.GetWidth() - dx;
-		int h = bitmap.GetHeight() - dy;
-		/* picture is out of viewport */
-		if (w <= 0 || h <= 0) return;
-		wxBitmap newBitmap = bitmap.GetSubBitmap(wxRect(dx, dy, w, h));
-		x += dx;
-		y += dy;
-		bmp = newBitmap;
-	}
-	else {
-		bmp = bitmap;
-	}
-	if (m_pdc)
-		m_pdc->DrawBitmap(bmp, x, y, usemask);
-	else {
-		wxImage image = bmp.ConvertToImage();
-		int w = image.GetWidth(), h = image.GetHeight();
-
-		if (usemask) {
-			unsigned char *d = image.GetData();
-			unsigned char *a = image.GetAlpha();
-
-			unsigned char mr, mg, mb;
-			if (!a && !image.GetOrFindMaskColour(&mr, &mg, &mb))
-				printf("trying to use mask to draw a bitmap without alpha or mask\n");
-
-			unsigned char *e = new unsigned char[4 * w * h];
-			{
-				for (int y = 0; y < h; y++)
-					for (int x = 0; x < w; x++) {
-						unsigned char r, g, b;
-						int off = (y * image.GetWidth() + x);
-						r = d[off * 3 + 0];
-						g = d[off * 3 + 1];
-						b = d[off * 3 + 2];
-
-						e[off * 4 + 0] = r;
-						e[off * 4 + 1] = g;
-						e[off * 4 + 2] = b;
-
-						e[off * 4 + 3] =
-							a ? a[off] : ((r == mr) && (g == mg) && (b == mb) ? 0 : 255);
-					}
-			}
-
-			glColor4f(1, 1, 1, 1);
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glRasterPos2i(x, y);
-			glPixelZoom(1, -1);
-			glDrawPixels(w, h, GL_RGBA, GL_UNSIGNED_BYTE, e);
-			glPixelZoom(1, 1);
-			glDisable(GL_BLEND);
-
-			delete[](e);
-		}
-		else {
-			glRasterPos2i(x, y);
-			glPixelZoom(1, -1); /* draw data from top to bottom */
-			glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, image.GetData());
-			glPixelZoom(1, 1);
-		}
-	}
-}
-
-void Dlg::DrawGLLabels(Dlg *pof, wxDC *dc,
-	PlugIn_ViewPort *vp,
-	wxImage &imageLabel, double myLat, double myLon, int offset)
-{
-
-	//---------------------------------------------------------
-	// Ecrit les labels
-	//---------------------------------------------------------
-
-	wxPoint ab;
-	GetCanvasPixLL(vp, &ab, myLat, myLon);
-
-	wxPoint cd;
-	GetCanvasPixLL(vp, &cd, myLat, myLon);
-
-	int w = imageLabel.GetWidth();
-	int h = imageLabel.GetHeight();
-
-	int label_offset = 0;
-	int xd = (ab.x + cd.x - (w + label_offset * 2)) / 2;
-	int yd = (ab.y + cd.y - h) / 2 + offset;
-
-	if (dc) {
-		/* don't use alpha for isobars, for some reason draw bitmap ignores
-		   the 4th argument (true or false has same result) */
-		wxImage img(w, h, imageLabel.GetData(), true);
-		dc->DrawBitmap(img, xd, yd, false);
-	}
-	else { /* opengl */
-
-		int w = imageLabel.GetWidth(), h = imageLabel.GetHeight();
-
-		unsigned char *d = imageLabel.GetData();
-		unsigned char *a = imageLabel.GetAlpha();
-
-		unsigned char mr, mg, mb;
-		if (!a && !imageLabel.GetOrFindMaskColour(&mr, &mg, &mb))
-			wxMessageBox(_T("trying to use mask to draw a bitmap without alpha or mask\n"));
-
-		unsigned char *e = new unsigned char[4 * w * h];
-		{
-			for (int y = 0; y < h; y++)
-				for (int x = 0; x < w; x++) {
-					unsigned char r, g, b;
-					int off = (y * w + x);
-					r = d[off * 3 + 0];
-					g = d[off * 3 + 1];
-					b = d[off * 3 + 2];
-
-					e[off * 4 + 0] = r;
-					e[off * 4 + 1] = g;
-					e[off * 4 + 2] = b;
-
-					e[off * 4 + 3] =
-						a ? a[off] : ((r == mr) && (g == mg) && (b == mb) ? 0 : 255);
-				}
-		}
-
-		glColor4f(1, 1, 1, 1);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glRasterPos2i(xd, yd);
-		glPixelZoom(1, -1);
-		glDrawPixels(w, h, GL_RGBA, GL_UNSIGNED_BYTE, e);
-		glPixelZoom(1, 1);
-		glDisable(GL_BLEND);
-
-		delete[](e);
-	}
-
-}
-
-wxImage &Dlg::DrawGLTextString(wxString myText) {
-
-	wxString labels;
-	labels = myText;
-	std::map <wxString, wxImage >::iterator it;
-
-	it = m_labelCacheText.find(labels);
-	if (it != m_labelCacheText.end())
-		return it->second;
-
-	wxMemoryDC mdc(wxNullBitmap);
-	pTCFont = wxTheFontList->FindOrCreateFont(12, wxDEFAULT, wxNORMAL, wxBOLD, FALSE, wxString(_T("Eurostile Extended")));
-	mdc.SetFont(*pTCFont);
-
-	int w, h;
-	mdc.GetTextExtent(labels, &w, &h);
-
-	int label_offset = 15;   //5
-
-	wxBitmap bm(w + label_offset * 2, h + 1);
-	mdc.SelectObject(bm);
-	mdc.Clear();
-
-	wxPen penText(m_text_color);
-	mdc.SetPen(penText);
-
-	mdc.SetBrush(*wxTRANSPARENT_BRUSH);
-	mdc.SetTextForeground(m_text_color);
-	mdc.SetTextBackground(wxTRANSPARENT);
-
-	int xd = 0;
-	int yd = 0;
-
-	mdc.DrawText(labels, label_offset + xd, yd + 1);
-	mdc.SelectObject(wxNullBitmap);
-
-	m_labelCacheText[myText] = bm.ConvertToImage();
-
-	m_labelCacheText[myText].InitAlpha();
-
-	wxImage &image = m_labelCacheText[myText];
-
-	unsigned char *d = image.GetData();
-	unsigned char *a = image.GetAlpha();
-
-	w = image.GetWidth(), h = image.GetHeight();
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
-			int r, g, b;
-			int ioff = (y * w + x);
-			r = d[ioff * 3 + 0];
-			g = d[ioff * 3 + 1];
-			b = d[ioff * 3 + 2];
-
-			a[ioff] = 255 - (r + g + b) / 3;
-		}
-	}
-	return image;
-}
-
 
 void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){
 //add point
@@ -531,7 +387,7 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 		string name = features["properties"]["Name"].asString();
 		wxString myname(name.c_str(), wxConvUTF8);
 		outPort.Name = myname;
-
+		
 		string id = features["properties"]["Id"].asString();
 		wxString myId(id.c_str(), wxConvUTF8);
 		outPort.Id = myId;

@@ -50,6 +50,8 @@ set(PKG_HOMEPAGE https://github.com/Rasbats/uktides_pi)
 set(PKG_INFO_URL https://opencpn.org/OpenCPN/plugins/uktides.html)
 
 set(SRC
+    src/bbox.cpp
+    src/bbox.h		
     src/UKTides_pi.h
     src/UKTides_pi.cpp
     src/icons.h
@@ -62,6 +64,10 @@ set(SRC
 	src/NavFunc.h
 	src/tidetable.cpp
 	src/tidetable.h
+	src/gl_private.h
+	src/pidc.cpp
+	src/pidc.h
+
 )
 
 set(PKG_API_LIB api-16)  #  A directory in libs/ e. g., api-17 or api-16
@@ -69,11 +75,17 @@ set(PKG_API_LIB api-16)  #  A directory in libs/ e. g., api-17 or api-16
 macro(late_init)
   # Perform initialization after the PACKAGE_NAME library, compilers
   # and ocpn::api is available.
-  if (PLUGIN_USE_SVG)
-    target_compile_definitions(${PACKAGE_NAME} PUBLIC PLUGIN_USE_SVG)
+  if (OTCURRENT_USE_SVG)
+    target_compile_definitions(${PACKAGE_NAME} PUBLIC OTCURRENT_USE_SVG)
   endif ()
-endmacro ()
 
+  add_definitions(-DocpnUSE_GL)
+
+  if (QT_ANDROID)
+    add_definitions(-DUSE_ANDROID_GLES2)
+  endif ()
+  
+endmacro ()
 macro(add_plugin_libraries)
   # Add libraries required by this plugin
   add_subdirectory("libs/tinyxml")
