@@ -266,7 +266,11 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
-			m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
+			wxMask *gr_mask =
+				new wxMask(m_stationBitmap, wxColour(0, 0, 0));
+            m_stationBitmap.SetMask(gr_mask);
+
+			m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, true);
 
 			int textShift = -15;
 
