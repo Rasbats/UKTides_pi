@@ -123,6 +123,7 @@ public:
 		wxImage &DrawGLTextString(wxString myText);
 		wxBitmap m_stationBitmap;
 
+
 		TideTable* tidetable;
 		bool b_usingSavedPorts;
 		bool b_clearSavedIcons;

@@ -224,7 +224,17 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
-			m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
+			if (m_dc) {
+				wxColour myColour = wxColour("RED");
+				// m_oDC->SetFont( *mfont );
+				m_dc->SetPen(*wxBLACK_PEN);
+				m_dc->SetBrush(myColour);
+				m_dc->DrawRectangle(pixxc, pixyc, 20, 20);          
+			}
+			
+
+
+			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
 
 			int textShift = -15;
 
@@ -266,11 +276,20 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
-			wxMask *gr_mask =
-				new wxMask(m_stationBitmap, wxColour(0, 0, 0));
-            m_stationBitmap.SetMask(gr_mask);
+			//wxMask *gr_mask =
+			//	new wxMask(m_stationBitmap, wxColour(0, 0, 0));
+            //m_stationBitmap.SetMask(gr_mask);
 
-			m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, true);
+			if (m_dc) {
+				wxColour myColour = wxColour("RED");
+				// m_oDC->SetFont( *mfont );
+				m_dc->SetPen(*wxBLACK_PEN);
+				m_dc->SetBrush(myColour);
+				m_dc->DrawRectangle(pixxc, pixyc, 20, 20);          
+			}
+			
+
+			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, true);
 
 			int textShift = -15;
 
