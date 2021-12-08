@@ -41,6 +41,11 @@
 #include "bbox.h"
 #include "pidc.h"
 
+#ifdef __OCPN__ANDROID__
+#include "qdebug.h"
+#include "pi_shaders.h"
+#endif
+
 #ifdef __WXOSX__
 # include <OpenGL/OpenGL.h>
 # include <OpenGL/gl3.h>
@@ -55,12 +60,13 @@
 #include "GLES2/gl2.h"
 #endif
 
-
+#ifdef ocpnUSE_GL
+static GLuint texture_format = 0;
+#endif
 
 class Position;
 class myPort;
 
-static int texture_format;
 static bool glQueried = false;
 
 static GLboolean QueryExtension( const char *extName )
@@ -224,15 +230,36 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
+#ifdef ocpnUSE_GL
+
 			if (m_dc) {
 				wxColour myColour = wxColour("RED");
 				// m_oDC->SetFont( *mfont );
-				m_dc->SetPen(*wxBLACK_PEN);
-				m_dc->SetBrush(myColour);
-				m_dc->DrawRectangle(pixxc, pixyc, 20, 20);          
+				//m_dc->SetPen(*wxBLACK_PEN);
+				//m_dc->SetBrush(myColour);
+				//m_dc->DrawRectangle(pixxc, pixyc, 20, 20); 
+				int w = 20;
+				int h = 20;
+
+				/* draw bounding rectangle */
+				glBegin(GL_QUADS);
+				glVertex2i(pixxc, pixyc);
+				glVertex2i(pixxc + w, pixyc);
+				glVertex2i(pixxc + w, pixyc + h);
+				glVertex2i(pixxc, pixyc + h);
+				glEnd();
+
+				glColor4ub(0, 0, 0, 0);
+
+				glBegin(GL_LINE_LOOP);
+				glVertex2i(pixxc, pixyc);
+				glVertex2i(pixxc + w, pixyc);
+				glVertex2i(pixxc + w, pixyc + h);
+				glVertex2i(pixxc, pixyc + h);
+				glEnd();
 			}
 			
-
+#endif
 
 			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
 
