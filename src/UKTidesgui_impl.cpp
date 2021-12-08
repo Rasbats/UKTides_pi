@@ -230,12 +230,22 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
-#ifdef ocpnUSE_GL
+
 			wxColour back_color = wxColour("RED");
-			m_dc->DrawRoundedRectangle(pixxc, pixyc, 20, 20, 0);
+			//m_dc->DrawRoundedRectangle(pixxc, pixyc, 20, 20, 0);
+			int x = pixxc;
+			int y = pixyc;
+			int w = 20;
+			int h = 20;
+
+			 /* draw bounding rectangle */
+			m_dc->SetPen(wxPen(back_color, 3));
+			m_dc->DrawLine(x, y, x + w, y);
+			m_dc->DrawLine(x + w, y, x + w, y + h);
+			m_dc->DrawLine(x + w, y + h, x, y + h);
+			m_dc->DrawLine(x, y + h, x, y);
 
 			
-#endif
 
 			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
 
