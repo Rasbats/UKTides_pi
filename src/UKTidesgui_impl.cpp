@@ -231,33 +231,9 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixyc = cpoint.y;
 
 #ifdef ocpnUSE_GL
+			wxColour back_color = wxColour("RED");
+			m_dc->DrawRoundedRectangle(pixxc, pixyc, 20, 20, 0);
 
-			if (m_dc) {
-				wxColour myColour = wxColour("RED");
-				// m_oDC->SetFont( *mfont );
-				//m_dc->SetPen(*wxBLACK_PEN);
-				//m_dc->SetBrush(myColour);
-				//m_dc->DrawRectangle(pixxc, pixyc, 20, 20); 
-				int w = 20;
-				int h = 20;
-
-				/* draw bounding rectangle */
-				glBegin(GL_QUADS);
-				glVertex2i(pixxc, pixyc);
-				glVertex2i(pixxc + w, pixyc);
-				glVertex2i(pixxc + w, pixyc + h);
-				glVertex2i(pixxc, pixyc + h);
-				glEnd();
-
-				glColor4ub(0, 0, 0, 0);
-
-				glBegin(GL_LINE_LOOP);
-				glVertex2i(pixxc, pixyc);
-				glVertex2i(pixxc + w, pixyc);
-				glVertex2i(pixxc + w, pixyc + h);
-				glVertex2i(pixxc, pixyc + h);
-				glEnd();
-			}
 			
 #endif
 
