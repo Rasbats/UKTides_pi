@@ -80,10 +80,6 @@ macro(late_init)
   endif ()
 
   add_definitions(-DocpnUSE_GL)
-
-  if (QT_ANDROID)
-    add_definitions(-DUSE_ANDROID_GLES2)
-  endif ()
   
 endmacro ()
 macro(add_plugin_libraries)
