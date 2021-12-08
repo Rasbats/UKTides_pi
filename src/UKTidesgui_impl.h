@@ -140,11 +140,6 @@ public:
 private:
 	
 	
-	
-
-	wxDC *m_pdc;
-	wxGraphicsContext *m_gdc;
-
 	wxString m_titlePortName;
 	
 	list<TidalEvent>myevents;
