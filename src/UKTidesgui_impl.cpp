@@ -211,6 +211,14 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 
 	wxFont font(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 	m_dc->SetFont(font);
+
+	 if( m_dc ) {
+		wxColour color = wxColour("RED");
+	    wxPen pen( color, 2 );
+
+        m_dc->SetPen( pen );
+        
+    }
 	
 	double plat = 0.0;
 	double plon = 0.0;
@@ -231,20 +239,19 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixyc = cpoint.y;
 
 
-			wxColour back_color = wxColour("RED");
+			
 			//m_dc->DrawRoundedRectangle(pixxc, pixyc, 20, 20, 0);
 			int x = pixxc;
 			int y = pixyc;
 			int w = 20;
 			int h = 20;
-
-			 /* draw bounding rectangle */
-			m_dc->SetPen(wxPen(back_color, 3));
-			m_dc->DrawLine(x, y, x + w, y);
-			m_dc->DrawLine(x + w, y, x + w, y + h);
-			m_dc->DrawLine(x + w, y + h, x, y + h);
-			m_dc->DrawLine(x, y + h, x, y);
-
+			if (m_dc) {
+				/* draw bounding rectangle */
+				m_dc->DrawLine(x, y, x + w, y);
+				m_dc->DrawLine(x + w, y, x + w, y + h);
+				m_dc->DrawLine(x + w, y + h, x, y + h);
+				m_dc->DrawLine(x, y + h, x, y);
+			}
 			
 
 			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
