@@ -49,10 +49,13 @@
 
 #include "pidc.h"
 
-
-
 #include "linmath.h"
 #include "pi_shaders.h"
+
+#ifdef USE_ANDROID_GLES2
+#include "pi_shaders.h"
+#include <gl2.h>
+#endif
 
 #ifdef __OCPN__ANDROID__
 #include "qdebug.h"
