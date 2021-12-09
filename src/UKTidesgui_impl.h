@@ -91,6 +91,10 @@ public:
 	Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent);
 	~Dlg();
 
+#ifdef __OCPN__ANDROID__
+    void OnMouseEvent( wxMouseEvent& event );
+#endif
+
         void OnDownload( wxCommandEvent& event );	
 		void OnGetSavedTides(wxCommandEvent& event);
 		void DoRemovePortIcons(wxCommandEvent& event);

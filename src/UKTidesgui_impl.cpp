@@ -37,11 +37,14 @@
 
 #include <wx/glcanvas.h>
 #include <wx/graphics.h>
+#include "qtstylesheet.h"
 
 #include "bbox.h"
 #include "pidc.h"
 
-
+#ifdef __OCPN__ANDROID__
+wxWindow *g_Window;
+#endif
 
 #ifdef __WXOSX__
 # include <OpenGL/OpenGL.h>
@@ -114,6 +117,12 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 	this->Fit();
     	dbg=false; //for debug output set to true
 
+#ifdef __OCPN__ANDROID__
+    g_Window = this;
+    GetHandle()->setStyleSheet( qtStyleSheet);
+    Connect( wxEVT_MOTION, wxMouseEventHandler( Dlg::OnMouseEvent ) );
+#endif
+
 	LoadTidalEventsFromXml();
 	RemoveOldDownloads();
 
@@ -124,6 +133,28 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 Dlg::~Dlg()
 {
 }
+
+#ifdef __OCPN__ANDROID__ 
+wxPoint g_startPos;
+wxPoint g_startMouse;
+wxPoint g_mouse_pos_screen;
+
+void Dlg::OnMouseEvent( wxMouseEvent& event )
+{
+    g_mouse_pos_screen = ClientToScreen( event.GetPosition() );
+    
+    if(event.Dragging()){
+        int x = wxMax(0, g_startPos.x + (g_mouse_pos_screen.x - g_startMouse.x));
+        int y = wxMax(0, g_startPos.y + (g_mouse_pos_screen.y - g_startMouse.y));
+        int xmax = ::wxGetDisplaySize().x - GetSize().x;
+        x = wxMin(x, xmax);
+        int ymax = ::wxGetDisplaySize().y - (GetSize().y * 2);          // Some fluff at the bottom
+        y = wxMin(y, ymax);
+        
+        g_Window->Move(x, y);
+    }
+}
+#endif
 
 void Dlg::OnInformation(wxCommandEvent& event)
 {
