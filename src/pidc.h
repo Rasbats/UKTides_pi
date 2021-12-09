@@ -111,12 +111,7 @@ public:
 
      void Clear();
      void DrawRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h );
-     void DrawRoundedRectangle(wxCoord x, wxCoord y, wxCoord w, wxCoord h,
-                            wxCoord rr);
-
-	 void drawrrhelperGLES2(wxCoord x0, wxCoord y0, wxCoord r, int quadrant,
-                         int steps);
-	 //void DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxCoord rr );
+     void DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxCoord rr );
      void DrawCircle(wxCoord x, wxCoord y, wxCoord radius);
      void DrawCircle(const wxPoint &pt, wxCoord radius) { DrawCircle(pt.x, pt.y, radius); }
      void StrokeCircle(wxCoord x, wxCoord y, wxCoord radius);
@@ -165,6 +160,8 @@ protected:
 
      void GLDrawBlendData(wxCoord x, wxCoord y, wxCoord w, wxCoord h,
                           int format, const unsigned char *data);
+
+     void drawrrhelperGLES2( wxCoord x0, wxCoord y0, wxCoord r, int quadrant, int steps );
      
      wxGLCanvas *glcanvas;
      wxDC *dc;

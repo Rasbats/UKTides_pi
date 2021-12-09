@@ -49,6 +49,8 @@
 
 #include "pidc.h"
 
+
+
 #include "linmath.h"
 #include "pi_shaders.h"
 
@@ -1044,184 +1046,160 @@ void piDC::DrawRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h )
             glVertex2i( x, y + h );
             glEnd();
         }
-#else
-    DrawRoundedRectangle(x, y, w, h, 0);
-
 #endif
-  }
+    }
 #endif
 }
 
 /* draw the arc along corners */
-static void drawrrhelper(wxCoord x0, wxCoord y0, wxCoord r, int quadrant,
-                         int steps) {
+static void drawrrhelper( wxCoord x0, wxCoord y0, wxCoord r, int quadrant, int steps )
+{
 #ifdef ocpnUSE_GL
 #ifndef USE_ANDROID_GLES2
-  float step = 1.0 / steps, rs = 2.0 * r * step, rss = rs * step, x, y, dx, dy,
-        ddx, ddy;
-  switch (quadrant) {
-    case 0:
-      x = r, y = 0, dx = 0, dy = -rs, ddx = -rss, ddy = rss;
-      break;
-    case 1:
-      x = 0, y = -r, dx = -rs, dy = 0, ddx = rss, ddy = rss;
-      break;
-    case 2:
-      x = -r, y = 0, dx = 0, dy = rs, ddx = rss, ddy = -rss;
-      break;
-    case 3:
-      x = 0, y = r, dx = rs, dy = 0, ddx = -rss, ddy = -rss;
-      break;
-    default:
-      return;  // avoid unitialized compiler warnings
-  }
+    float step = 1.0/steps, rs = 2.0*r*step, rss = rs*step, x, y, dx, dy, ddx, ddy;
+    switch(quadrant) {
+    case 0: x =  r, y =  0, dx =   0, dy = -rs, ddx = -rss, ddy =  rss; break;
+    case 1: x =  0, y = -r, dx = -rs, dy =   0, ddx =  rss, ddy =  rss; break;
+    case 2: x = -r, y =  0, dx =   0, dy =  rs, ddx =  rss, ddy = -rss; break;
+    case 3: x =  0, y =  r, dx =  rs, dy =   0, ddx = -rss, ddy = -rss; break;
+    default: return; // avoid unitialized compiler warnings
+    }
 
-  for (int i = 0; i < steps; i++) {
-    glVertex2i(x0 + floor(x), y0 + floor(y));
-    x += dx + ddx / 2, y += dy + ddy / 2;
-    dx += ddx, dy += ddy;
-  }
-  glVertex2i(x0 + floor(x), y0 + floor(y));
+    for(int i=0; i<steps; i++) {
+        glVertex2i( x0 + floor(x), y0 + floor(y) );
+         x += dx+ddx/2,  y += dy+ddy/2;
+        dx += ddx,      dy += ddy;
+    }
+    glVertex2i( x0 + floor(x), y0 + floor(y) );
 #endif
 #endif
 }
 
-
-void piDC::DrawRoundedRectangle(wxCoord x, wxCoord y, wxCoord w, wxCoord h,
-                                     wxCoord r) {
-  if (dc) dc->DrawRoundedRectangle(x, y, w, h, r);
+void piDC::drawrrhelperGLES2( wxCoord x0, wxCoord y0, wxCoord r, int quadrant, int steps )
+{
 #ifdef ocpnUSE_GL
-  else {
-    r++;
-    int steps = ceil(sqrt((float)r));
+    float step = 1.0/steps, rs = 2.0*r*step, rss = rs*step, x, y, dx, dy, ddx, ddy;
+    switch(quadrant) {
+        case 0: x =  r, y =  0, dx =   0, dy = -rs, ddx = -rss, ddy =  rss; break;
+        case 1: x =  0, y = -r, dx = -rs, dy =   0, ddx =  rss, ddy =  rss; break;
+        case 2: x = -r, y =  0, dx =   0, dy =  rs, ddx =  rss, ddy = -rss; break;
+        case 3: x =  0, y =  r, dx =  rs, dy =   0, ddx = -rss, ddy = -rss; break;
+        default: return; // avoid unitialized compiler warnings
+    }
 
-    wxCoord x1 = x + r, x2 = x + w - r;
-    wxCoord y1 = y + r, y2 = y + h - r;
+    for(int i=0; i<steps; i++) {
+        workBuf[workBufIndex++] = x0 + floor(x);
+        workBuf[workBufIndex++] = y0 + floor(y);
+
+        x += dx+ddx/2,  y += dy+ddy/2;
+        dx += ddx,      dy += ddy;
+    }
+
+    workBuf[workBufIndex++] = x0 + floor(x);
+    workBuf[workBufIndex++] = y0 + floor(y);
+#endif
+}
+
+void piDC::DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxCoord r )
+{
+    if( dc )
+        dc->DrawRoundedRectangle( x, y, w, h, r );
+#ifdef ocpnUSE_GL
+    else {
+        r++;
+        int steps = ceil(sqrt((float)r));
+
+        wxCoord x1 = x + r, x2 = x + w - r;
+        wxCoord y1 = y + r, y2 = y + h - r;
 
 #ifdef USE_ANDROID_GLES2
 
-    //  Grow the work buffer as necessary
-    size_t bufReq = steps * 8 * 2 * sizeof(float);  // large, to be sure
+        //  Grow the work buffer as necessary
+        size_t bufReq = steps * 8 * 2 * sizeof(float);      // large, to be sure
 
-    if (workBufSize < bufReq) {
-      workBuf = (float *)realloc(workBuf, bufReq);
-      workBufSize = bufReq;
-    }
-    workBufIndex = 0;
+        if( workBufSize < bufReq ){
+            workBuf = (float *)realloc(workBuf, bufReq);
+            workBufSize = bufReq;
+        }
+        workBufIndex = 0;
 
-    drawrrhelperGLES2(x2, y1, r, 0, steps);
-    drawrrhelperGLES2(x1, y1, r, 1, steps);
-    drawrrhelperGLES2(x1, y2, r, 2, steps);
-    drawrrhelperGLES2(x2, y2, r, 3, steps);
+        drawrrhelperGLES2( x2, y1, r, 0, steps );
+        drawrrhelperGLES2( x1, y1, r, 1, steps );
+        drawrrhelperGLES2( x1, y2, r, 2, steps );
+        drawrrhelperGLES2( x2, y2, r, 3, steps );
 
-    glUseProgram(pi_color_tri_shader_program);
+        glUseProgram( pi_color_tri_shader_program );
 
-    // Get pointers to the attributes in the program.
-    GLint mPosAttrib =
-        glGetAttribLocation(pi_color_tri_shader_program, "position");
+        // Get pointers to the attributes in the program.
+        GLint mPosAttrib = glGetAttribLocation( pi_color_tri_shader_program, "position" );
 
-    // Disable VBO's (vertex buffer objects) for attributes.
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        // Disable VBO's (vertex buffer objects) for attributes.
+        glBindBuffer( GL_ARRAY_BUFFER, 0 );
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
-    glVertexAttribPointer(mPosAttrib, 2, GL_FLOAT, GL_FALSE, 0, workBuf);
-    glEnableVertexAttribArray(mPosAttrib);
+        glVertexAttribPointer( mPosAttrib, 2, GL_FLOAT, GL_FALSE, 0, workBuf );
+        glEnableVertexAttribArray( mPosAttrib );
 
-    //  Border color
-    float bcolorv[4];
-    bcolorv[0] = m_brush.GetColour().Red() / float(256);
-    bcolorv[1] = m_brush.GetColour().Green() / float(256);
-    bcolorv[2] = m_brush.GetColour().Blue() / float(256);
-    bcolorv[3] = m_brush.GetColour().Alpha() / float(256);
 
-    GLint bcolloc = glGetUniformLocation(pi_color_tri_shader_program, "color");
-    glUniform4fv(bcolloc, 1, bcolorv);
+        //  Border color
+        float bcolorv[4];
+        bcolorv[0] = m_brush.GetColour().Red() / 255.0f;
+        bcolorv[1] = m_brush.GetColour().Green() / 255.0f;
+        bcolorv[2] = m_brush.GetColour().Blue() / 255.0f;
+        bcolorv[3] = m_brush.GetColour().Alpha() / 255.0f;
 
-    float angle = 0.;
-    float xoffset = 0;
-    float yoffset = 0;
+        GLint bcolloc = glGetUniformLocation(pi_color_tri_shader_program,"color");
+        glUniform4fv(bcolloc, 1, bcolorv);
 
-    // Rotate
-    mat4x4 I, Q;
-    mat4x4_identity(I);
-    mat4x4_rotate_Z(Q, I, angle);
 
-    // Translate
-    Q[3][0] = xoffset;
-    Q[3][1] = yoffset;
+        float angle = 0.;
+        float xoffset = 0;
+        float yoffset = 0;
 
-    GLint matloc =
-        glGetUniformLocation(pi_color_tri_shader_program, "TransformMatrix");
-    glUniformMatrix4fv(matloc, 1, GL_FALSE, (const GLfloat *)Q);
+        // Rotate
+        mat4x4 I, Q;
+        mat4x4_identity(I);
+        mat4x4_rotate_Z(Q, I, angle);
 
-    // Perform the actual drawing.
-    glDrawArrays(GL_TRIANGLE_FAN, 0, workBufIndex / 2);
+        // Translate
+        Q[3][0] = xoffset;
+        Q[3][1] = yoffset;
 
-    // Restore the per-object transform to Identity Matrix
-    mat4x4 IM;
-    mat4x4_identity(IM);
-    GLint matlocf =
-        glGetUniformLocation(pi_color_tri_shader_program, "TransformMatrix");
-    glUniformMatrix4fv(matlocf, 1, GL_FALSE, (const GLfloat *)IM);
+        GLint matloc = glGetUniformLocation(pi_color_tri_shader_program,"TransformMatrix");
+        glUniformMatrix4fv( matloc, 1, GL_FALSE, (const GLfloat*)Q);
+
+        // Perform the actual drawing.
+        glDrawArrays(GL_TRIANGLE_FAN, 0, workBufIndex/2);
+
+        // Restore the per-object transform to Identity Matrix
+        mat4x4 IM;
+        mat4x4_identity(IM);
+        GLint matlocf = glGetUniformLocation(pi_color_tri_shader_program,"TransformMatrix");
+        glUniformMatrix4fv( matlocf, 1, GL_FALSE, (const GLfloat*)IM);
+
 
 #else
-    if (ConfigureBrush()) {
-      glBegin(GL_TRIANGLE_FAN);
-      drawrrhelper(x2, y1, r, 0, steps);
-      drawrrhelper(x1, y1, r, 1, steps);
-      drawrrhelper(x1, y2, r, 2, steps);
-      drawrrhelper(x2, y2, r, 3, steps);
-      glEnd();
-    }
+        if( ConfigureBrush() ) {
+            glBegin( GL_TRIANGLE_FAN );
+            drawrrhelper( x2, y1, r, 0, steps );
+            drawrrhelper( x1, y1, r, 1, steps );
+            drawrrhelper( x1, y2, r, 2, steps );
+            drawrrhelper( x2, y2, r, 3, steps );
+            glEnd();
+        }
 
-    if (ConfigurePen()) {
-      glBegin(GL_LINE_LOOP);
-      drawrrhelper(x2, y1, r, 0, steps);
-      drawrrhelper(x1, y1, r, 1, steps);
-      drawrrhelper(x1, y2, r, 2, steps);
-      drawrrhelper(x2, y2, r, 3, steps);
-      glEnd();
-    }
+        if( ConfigurePen() ) {
+            glBegin( GL_LINE_LOOP );
+            drawrrhelper( x2, y1, r, 0, steps );
+            drawrrhelper( x1, y1, r, 1, steps );
+            drawrrhelper( x1, y2, r, 2, steps );
+            drawrrhelper( x2, y2, r, 3, steps );
+            glEnd();
+        }
 #endif
-  }
+    }
 #endif
 }
-
-void piDC::drawrrhelperGLES2(wxCoord x0, wxCoord y0, wxCoord r,
-                                  int quadrant, int steps) {
-#ifdef ocpnUSE_GL
-  float step = 1.0 / steps, rs = 2.0 * r * step, rss = rs * step, x, y, dx, dy,
-        ddx, ddy;
-  switch (quadrant) {
-    case 0:
-      x = r, y = 0, dx = 0, dy = -rs, ddx = -rss, ddy = rss;
-      break;
-    case 1:
-      x = 0, y = -r, dx = -rs, dy = 0, ddx = rss, ddy = rss;
-      break;
-    case 2:
-      x = -r, y = 0, dx = 0, dy = rs, ddx = rss, ddy = -rss;
-      break;
-    case 3:
-      x = 0, y = r, dx = rs, dy = 0, ddx = -rss, ddy = -rss;
-      break;
-    default:
-      return;  // avoid unitialized compiler warnings
-  }
-
-  for (int i = 0; i < steps; i++) {
-    workBuf[workBufIndex++] = x0 + floor(x);
-    workBuf[workBufIndex++] = y0 + floor(y);
-
-    x += dx + ddx / 2, y += dy + ddy / 2;
-    dx += ddx, dy += ddy;
-  }
-
-  workBuf[workBufIndex++] = x0 + floor(x);
-  workBuf[workBufIndex++] = y0 + floor(y);
-#endif
-}
-
 
 void piDC::DrawCircle( wxCoord x, wxCoord y, wxCoord radius )
 {

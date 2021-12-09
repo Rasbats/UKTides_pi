@@ -41,10 +41,7 @@
 #include "bbox.h"
 #include "pidc.h"
 
-#ifdef __OCPN__ANDROID__
-#include "qdebug.h"
-#include "pi_shaders.h"
-#endif
+
 
 #ifdef __WXOSX__
 # include <OpenGL/OpenGL.h>
@@ -238,21 +235,25 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
-
-			
+			if (m_dc) {
+				wxColour myColour = wxColour("RED");
+				DrawLine(pixxc, pixyc, pixxc + 20, pixyc + 20, myColour, 4);		      
+			}
+	
+			/*
 			//m_dc->DrawRoundedRectangle(pixxc, pixyc, 20, 20, 0);
 			int x = pixxc;
 			int y = pixyc;
 			int w = 20;
 			int h = 20;
 			if (m_dc) {
-				/* draw bounding rectangle */
+				// draw bounding rectangle //
 				m_dc->DrawLine(x, y, x + w, y);
 				m_dc->DrawLine(x + w, y, x + w, y + h);
 				m_dc->DrawLine(x + w, y + h, x, y + h);
 				m_dc->DrawLine(x, y + h, x, y);
 			}
-			
+			*/
 
 			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
 
