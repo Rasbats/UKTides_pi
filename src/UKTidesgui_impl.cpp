@@ -173,12 +173,6 @@ bool Dlg::RenderOverlay(piDC &dc, PlugIn_ViewPort &vp)
 
 	wxFont font(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 	m_dc->SetFont(font);
-
-	wxColour myColour = wxColour("RED");
-	
-	DrawLine(40, 40, 120, 120, myColour, 4);
-	
-
 	
 	if (!b_clearAllIcons) {
 		if (myports.size() != 0) {
@@ -238,26 +232,22 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
-			if (m_dc) {
-				wxColour myColour = wxColour("RED");
-				DrawLine(pixxc, pixyc, pixxc + 20, pixyc + 20, myColour, 4);		      
-			}
-	
-			/*
-			//m_dc->DrawRoundedRectangle(pixxc, pixyc, 20, 20, 0);
 			int x = pixxc;
 			int y = pixyc;
 			int w = 20;
-			int h = 20;
-			if (m_dc) {
-				// draw bounding rectangle //
-				m_dc->DrawLine(x, y, x + w, y);
-				m_dc->DrawLine(x + w, y, x + w, y + h);
-				m_dc->DrawLine(x + w, y + h, x, y + h);
-				m_dc->DrawLine(x, y + h, x, y);
-			}
-			*/
+			int h = 20;		
 
+			if (m_dc) {
+				wxColour myColour = wxColour("YELLOW");
+				DrawLine(pixxc, pixyc, pixxc + 20, pixyc + 20, myColour, 4);
+					
+				// draw bounding rectangle //
+				DrawLine(x, y, x + w, y, myColour, 2);
+				DrawLine(x + w, y, x + w, y + h, myColour, 2);
+				DrawLine(x + w, y + h, x, y + h, myColour, 2);
+				DrawLine(x, y + h, x, y, myColour, 2);
+			}
+			
 			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
 
 			int textShift = -15;
@@ -300,15 +290,21 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
-			//wxMask *gr_mask =
-			//	new wxMask(m_stationBitmap, wxColour(0, 0, 0));
-            //m_stationBitmap.SetMask(gr_mask);
+			int x = pixxc;
+			int y = pixyc;
+			int w = 20;
+			int h = 20;		
 
 			if (m_dc) {
-				wxColour myColour = wxColour("RED");
-				DrawLine(pixxc, pixyc, 20, 20, myColour, 4);		      
+				wxColour myColour = wxColour("YELLOW");
+				DrawLine(pixxc, pixyc, pixxc + 20, pixyc + 20, myColour, 4);
+					
+				// draw bounding rectangle //
+				DrawLine(x, y, x + w, y, myColour, 2);
+				DrawLine(x + w, y, x + w, y + h, myColour, 2);
+				DrawLine(x + w, y + h, x, y + h, myColour, 2);
+				DrawLine(x, y + h, x, y, myColour, 2);
 			}
-			
 
 			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, true);
 
