@@ -161,7 +161,7 @@ void TideTable::CreateControls()
       
       int char_size = GetCharWidth();
       
-	  m_wpList->InsertColumn(0, _("Date/Time"), wxLIST_FORMAT_LEFT, char_size * 14);
+	  m_wpList->InsertColumn(0, _("Date/Time"), wxLIST_FORMAT_LEFT, char_size * 25);
 	  m_wpList->InsertColumn(1, _("HW/LW"), wxLIST_FORMAT_LEFT, char_size * 14);
 	  m_wpList->InsertColumn(2, _("Height"), wxLIST_FORMAT_RIGHT, char_size * 9);
 

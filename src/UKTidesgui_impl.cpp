@@ -882,7 +882,25 @@ void Dlg::getPort(double m_lat, double m_lon) {
 		wxMessageBox(_("Please try again"));
 		return;
 	}
+	
+	bool foundPort = false;
+	
+	if (mySavedPorts.size() != 0) {
+		wxString portName, portId;
+		
+		for (list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
+			portName = (*it).Name;
+			portId = (*it).Id;
+			if (m_portId == portId) {
+				RemoveSavedPort(portName);
+				wxMessageBox(_("Please Download and select the port again"));
+				foundPort = true;
+				break;
+			}
+		}
 
+	}
+	if (foundPort)return;
 	getHWLW(m_portId.ToStdString());
 	
 }
