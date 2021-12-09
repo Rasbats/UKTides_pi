@@ -57,13 +57,11 @@
 #include "GLES2/gl2.h"
 #endif
 
-#ifdef ocpnUSE_GL
-static GLuint texture_format = 0;
-#endif
 
 class Position;
 class myPort;
 
+static int texture_format;
 static bool glQueried = false;
 
 static GLboolean QueryExtension( const char *extName )
@@ -130,6 +128,7 @@ Dlg::~Dlg()
 void Dlg::OnInformation(wxCommandEvent& event)
 {
 
+/*
 	wxFileName fn;
 	wxString tmp_path;
 
@@ -140,7 +139,7 @@ void Dlg::OnInformation(wxCommandEvent& event)
 	fn.SetFullName("UKTides.html");
 	wxString infolocation = fn.GetFullPath();
 
-	wxLaunchDefaultBrowser("file:///" + infolocation);
+	wxLaunchDefaultBrowser("file:///" + infolocation);*/
 }
 
 void Dlg::SetViewPort(PlugIn_ViewPort *vp)
@@ -175,7 +174,11 @@ bool Dlg::RenderOverlay(piDC &dc, PlugIn_ViewPort &vp)
 	wxFont font(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 	m_dc->SetFont(font);
 
-	wxColour myColour = wxColour("BLACK");
+	wxColour myColour = wxColour("RED");
+	
+	DrawLine(40, 40, 120, 120, myColour, 4);
+	
+
 	
 	if (!b_clearAllIcons) {
 		if (myports.size() != 0) {
@@ -303,7 +306,7 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 
 			if (m_dc) {
 				wxColour myColour = wxColour("RED");
-				DrawLine(pixxc, pixyc, pixxc + 20, pixyc + 20, myColour, 4);		      
+				DrawLine(pixxc, pixyc, 20, 20, myColour, 4);		      
 			}
 			
 
