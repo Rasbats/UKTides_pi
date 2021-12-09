@@ -124,6 +124,10 @@ public:
 		void DrawGLLabels(Dlg *pof, wxDC *dc, PlugIn_ViewPort *vp,
 			wxImage &imageLabel, double myLat, double myLon, int offset);
 		wxImage &DrawGLTextString(wxString myText);
+
+		void DrawLine(double x1, double y1, double x2, double y2,
+			const wxColour &color, double width);
+
 		wxBitmap m_stationBitmap;
 
 

@@ -302,10 +302,7 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 
 			if (m_dc) {
 				wxColour myColour = wxColour("RED");
-				// m_oDC->SetFont( *mfont );
-				m_dc->SetPen(*wxBLACK_PEN);
-				m_dc->SetBrush(myColour);
-				m_dc->DrawRectangle(pixxc, pixyc, 20, 20);          
+				DrawLine(pixxc, pixyc, pixxc + 20, pixyc + 20, myColour, 4);		      
 			}
 			
 
@@ -323,6 +320,17 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			}
 		}
 	}	
+}
+
+void Dlg::DrawLine(double x1, double y1, double x2, double y2,
+	const wxColour &color, double width)
+{
+	m_dc->ConfigurePen();
+	m_dc->SetPen(wxPen(color, width));
+	m_dc->ConfigureBrush();
+	m_dc->SetBrush(*wxTRANSPARENT_BRUSH);
+	m_dc->DrawLine(x1, y1, x2, y2, false);
+
 }
 
 void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){
