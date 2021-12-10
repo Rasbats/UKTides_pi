@@ -75,8 +75,8 @@ set(PKG_API_LIB api-16)  #  A directory in libs/ e. g., api-17 or api-16
 macro(late_init)
   # Perform initialization after the PACKAGE_NAME library, compilers
   # and ocpn::api is available.
-  if (OTCURRENT_USE_SVG)
-    target_compile_definitions(${PACKAGE_NAME} PUBLIC OTCURRENT_USE_SVG)
+  if (PLUGIN_USE_SVG)
+    target_compile_definitions(${PACKAGE_NAME} PUBLIC PLUGIN_USE_SVG)
   endif ()
 
   add_definitions(-DocpnUSE_GL)
