@@ -898,9 +898,9 @@ void Dlg::getPort(double m_lat, double m_lon) {
 				break;
 			}
 		}
-
+		if (foundPort)return;
 	}
-	if (foundPort)return;
+	
 	getHWLW(m_portId.ToStdString());
 	
 }
