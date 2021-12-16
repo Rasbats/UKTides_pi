@@ -263,10 +263,12 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
+#ifdef __OCPN__ANDROID__
+
 			int x = pixxc;
 			int y = pixyc;
 			int w = 20;
-			int h = 20;		
+			int h = 20;	
 
 			if (m_dc) {
 				wxColour myColour = wxColour("YELLOW");
@@ -278,9 +280,9 @@ void Dlg::DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 				DrawLine(x + w, y + h, x, y + h, myColour, 2);
 				DrawLine(x, y + h, x, y, myColour, 2);
 			}
-			
-			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
-
+#else
+			m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, false);
+#endif
 			int textShift = -15;
 
 			if (!m_dc) {
@@ -321,6 +323,8 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			pixxc = cpoint.x;
 			pixyc = cpoint.y;
 
+#ifdef __OCPN__ANDROID__
+
 			int x = pixxc;
 			int y = pixyc;
 			int w = 20;
@@ -336,8 +340,9 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 				DrawLine(x + w, y + h, x, y + h, myColour, 2);
 				DrawLine(x, y + h, x, y, myColour, 2);
 			}
-
-			//m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, true);
+#else
+			m_dc->DrawBitmap(m_stationBitmap, pixxc, pixyc, true);
+#endif
 
 			int textShift = -15;
 
@@ -399,7 +404,7 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 
 	wxString s_lat, s_lon;
 
-	wxString urlString = "https://admiraltyapi.azure-api.net/uktidalapi/api/V1/Stations?key=cefba1163a81498c9a1e5d03ea1fed69";
+	wxString urlString = "https://admiraltyapi.azure-api.net/uktidalapi/api/V1/Stations?key=29f375e044ff41b39340da20d50bc6a7";
 	wxURI url(urlString);
 
 	wxString tmp_file = wxFileName::CreateTempFileName("");
@@ -649,7 +654,7 @@ void Dlg::getHWLW(string id)
 	string duration = "?duration=";
 	string urlDays = choiceDays.ToStdString();
 
-	string key = "&key=cefba1163a81498c9a1e5d03ea1fed69";
+	string key = "&key=29f375e044ff41b39340da20d50bc6a7";
 	string tidalevents = "/TidalEvents";
 
 
@@ -891,9 +896,15 @@ void Dlg::getPort(double m_lat, double m_lon) {
 		for (list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
 			portName = (*it).Name;
 			portId = (*it).Id;
+		
 			if (m_portId == portId) {
-				RemoveSavedPort(portName);
-				wxMessageBox(_("Please Download and select the port again"));
+				
+				mdlg = new wxMessageDialog(this, _("In the saved list \n\nYES: Removes the saved port \nDownload for new tidal data \n\nNO: Use the saved list"),
+					_("Saved Port"), wxYES | wxNO | wxICON_WARNING);
+				if (mdlg->ShowModal() == wxID_YES) {
+					RemoveSavedPort(portName);				
+				}	
+				//wxMessageBox(_("In the saved list \n\nPlease Download and select the port again \nfor new tidal data"), _("Saved port"));
 				foundPort = true;
 				break;
 			}

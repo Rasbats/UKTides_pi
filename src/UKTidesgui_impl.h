@@ -143,6 +143,8 @@ public:
 		void OnTest(wxString thePort);
 		void RemoveSavedPort(wxString myStation);
 		void RemoveAllSavedPorts();
+
+		wxMessageDialog* mdlg;
 		
 		PlugIn_ViewPort  *vp;
 		PlugIn_ViewPort  *m_vp;

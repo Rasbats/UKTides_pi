@@ -168,6 +168,7 @@ bool UKTides_pi::DeInit(void)
             SetCalculatorDialogX(p.x);
             SetCalculatorDialogY(p.y);
             m_pDialog->Close();
+
             delete m_pDialog;
             m_pDialog = NULL;
 
