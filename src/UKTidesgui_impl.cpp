@@ -904,7 +904,7 @@ void Dlg::getPort(double m_lat, double m_lon) {
 				if (mdlg->ShowModal() == wxID_YES) {
 					RemoveSavedPort(portName);				
 				}	
-				//wxMessageBox(_("In the saved list \n\nPlease Download and select the port again \nfor new tidal data"), _("Saved port"));
+
 				foundPort = true;
 				break;
 			}
