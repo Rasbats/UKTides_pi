@@ -159,7 +159,7 @@ private:
 	list<TidalEvent>myevents;
 	list<TidalEvent>mySavedEvents;
 
-	myPort SavePortTidalEvents(list<TidalEvent>myEvents, string portId);
+	myPort SavePortTidalEvents(list<TidalEvent>myevents, string portId);
 	void SaveTidalEventsToXml(list<myPort>myPorts);
 
 	list<myPort> LoadTidalEventsFromXml();
