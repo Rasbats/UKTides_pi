@@ -1242,10 +1242,12 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 		mySavedPorts.clear();
 	}
 	else {
+
+		wxMessageBox("here");
 		for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
 
 			if ((*it).Name == myStation) {
-					wxMessageBox("here");
+					
 				mySavedPorts.erase(it);
 				break;
 			}
