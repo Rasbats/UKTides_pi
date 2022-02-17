@@ -1046,8 +1046,6 @@ myPort Dlg::SavePortTidalEvents(list<TidalEvent>myevents, string portId)
 void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 {
 
-	wxMessageBox("here");
-
 	wxString tidal_events_path;
 
 	tidal_events_path = StandardPath();
@@ -1247,6 +1245,7 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 		for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
 
 			if ((*it).Name == myStation) {
+					wxMessageBox("here");
 				mySavedPorts.erase(it);
 				break;
 			}
