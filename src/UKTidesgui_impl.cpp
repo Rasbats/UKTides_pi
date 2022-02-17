@@ -1062,13 +1062,16 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 	wxString s = wxFileName::GetPathSeparator();
 	wxString filename = tidal_events_path + s + "tidalevents.xml";
 
-	wxTextFile myXML(filename);
-	if(!myXML.Exists())
-		  return;
-	myXML.Open();
-	myXML.Clear();
-	myXML.Write();
-	myXML.Close();		            		
+	if (myPorts.size() == 0) {		
+		wxTextFile myXML(filename);
+		if(!myXML.Exists())
+		   return;
+		myXML.Open();
+		myXML.Clear();
+		myXML.Write();
+		myXML.Close();
+		return;             		
+	}
 	
 	
 	TiXmlDocument doc;
