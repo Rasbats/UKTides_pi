@@ -1060,15 +1060,15 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 	wxString filename = tidal_events_path + "/tidalevents.xml";
 
 
-	if (myPorts.size() == 0) {		
-		wxTextFile myXML(filename);
-		if(!myXML.Exists())
-		   return;
-		myXML.Open();
-		myXML.Clear();
-		myXML.Write();
-		return;             		
-	}
+
+	wxTextFile myXML(filename);
+	if(!myXML.Exists())
+		  return;
+	myXML.Open();
+	myXML.Clear();
+	myXML.Write();
+	myXML.Close();		            		
+	
 	
 	TiXmlDocument doc;
 	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "utf-8", "");
@@ -1104,6 +1104,7 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 	
 	if (!doc.SaveFile(filename))
 		wxLogMessage(_("UKTides") + wxString(": ") + _("Failed to save xml file: ") + filename);
+	
 }
 
 list<myPort>Dlg::LoadTidalEventsFromXml()
