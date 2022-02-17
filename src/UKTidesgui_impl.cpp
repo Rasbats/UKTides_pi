@@ -1250,10 +1250,9 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 
 			if ((*it).Name == myStation) {
 				mySavedPorts.erase(it);
+				break;
 			}
-			else {
-				it++;
-			}
+			
 		}
 	}
 	SaveTidalEventsToXml(mySavedPorts);
