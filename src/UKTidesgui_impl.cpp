@@ -1001,12 +1001,10 @@ wxString Dlg::StandardPath()
     wxString s = wxFileName::GetPathSeparator();
     wxString stdPath  = *GetpPrivateApplicationDataLocation();
 
-    stdPath += s + _T("plugins") + s + _T("UKTides_pi");
-	if (!wxDirExists(stdPath))
-		wxMkdir(stdPath);
-	stdPath += s + _T("data");
-	if (!wxDirExists(stdPath))
-		wxMkdir(stdPath);
+    stdPath += _T("plugins") + s + _T("UKTides_pi") + s + "data";
+
+    if (!wxDirExists(stdPath))
+      wxMkdir(stdPath);
 
     return stdPath;
 }
@@ -1069,10 +1067,8 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 		myXML.Open();
 		myXML.Clear();
 		myXML.Write();
-		myXML.Close();
 		return;             		
 	}
-	
 	
 	TiXmlDocument doc;
 	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "utf-8", "");
@@ -1108,7 +1104,6 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 	
 	if (!doc.SaveFile(filename))
 		wxLogMessage(_("UKTides") + wxString(": ") + _("Failed to save xml file: ") + filename);
-	
 }
 
 list<myPort>Dlg::LoadTidalEventsFromXml()
