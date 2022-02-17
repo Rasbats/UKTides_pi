@@ -1001,7 +1001,8 @@ wxString Dlg::StandardPath()
     wxString s = wxFileName::GetPathSeparator();
     wxString stdPath  = *GetpPrivateApplicationDataLocation();
 
-    stdPath += s + _T("plugins") + s + _T("UKTides_pi") + s + "data";
+    stdPath += _T("plugins") + s + _T("UKTides_pi") + s + "data";
+
     if (!wxDirExists(stdPath))
       wxMkdir(stdPath);
 
