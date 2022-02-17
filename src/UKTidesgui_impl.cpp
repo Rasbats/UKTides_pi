@@ -42,8 +42,6 @@
 #include "bbox.h"
 #include "pidc.h"
 
-#include <wx/utils.h>
-
 #ifdef __OCPN__ANDROID__
 wxWindow *g_Window;
 #endif
@@ -1048,6 +1046,8 @@ myPort Dlg::SavePortTidalEvents(list<TidalEvent>myevents, string portId)
 void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 {
 
+	wxMessageBox("here");
+
 	wxString tidal_events_path;
 
 	tidal_events_path = StandardPath();
@@ -1061,20 +1061,18 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
   
 	wxString s = wxFileName::GetPathSeparator();
 	wxString filename = tidal_events_path + s + "tidalevents.xml";
-	wxTextFile myXML(filename);
-	
+
+
 	if (myPorts.size() == 0) {		
-		
+		wxTextFile myXML(filename);
 		if(!myXML.Exists())
 		   return;
-		wxRemoveFile(filename);
+		myXML.Open();
+		myXML.Clear();
+		myXML.Write();
 		return;             		
 	}
-
-	if (myXML.Exists()) {
-		wxRemoveFile(filename);
-	}
-
+	
 	TiXmlDocument doc;
 	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "utf-8", "");
 	doc.LinkEndChild(decl);
@@ -1252,7 +1250,9 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 				mySavedPorts.erase(it);
 				break;
 			}
-			
+			else {
+				it++;
+			}
 		}
 	}
 	SaveTidalEventsToXml(mySavedPorts);
