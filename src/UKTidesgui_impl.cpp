@@ -42,6 +42,8 @@
 #include "bbox.h"
 #include "pidc.h"
 
+#include <wx/utils.h>
+
 #ifdef __OCPN__ANDROID__
 wxWindow *g_Window;
 #endif
@@ -1059,17 +1061,20 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
   
 	wxString s = wxFileName::GetPathSeparator();
 	wxString filename = tidal_events_path + s + "tidalevents.xml";
-
+	wxTextFile myXML(filename);
+	
 	if (myPorts.size() == 0) {		
-		wxTextFile myXML(filename);
+		
 		if(!myXML.Exists())
 		   return;
-		myXML.Open();
-		myXML.Clear();
-		myXML.Write();
+		wxRemoveFile(filename);
 		return;             		
 	}
-	
+
+	if (myXML.Exists()) {
+		wxRemoveFile(filename);
+	}
+
 	TiXmlDocument doc;
 	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "utf-8", "");
 	doc.LinkEndChild(decl);
