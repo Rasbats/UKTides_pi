@@ -1001,10 +1001,12 @@ wxString Dlg::StandardPath()
     wxString s = wxFileName::GetPathSeparator();
     wxString stdPath  = *GetpPrivateApplicationDataLocation();
 
-    stdPath += _T("plugins") + s + _T("UKTides_pi") + s + "data";
-
-    if (!wxDirExists(stdPath))
-      wxMkdir(stdPath);
+    stdPath += s + _T("plugins") + s + _T("UKTides_pi");
+	if (!wxDirExists(stdPath))
+		wxMkdir(stdPath);
+	stdPath += s + _T("data");
+	if (!wxDirExists(stdPath))
+		wxMkdir(stdPath);
 
     return stdPath;
 }
@@ -1057,9 +1059,8 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	}
   
-	wxString filename = tidal_events_path + "/tidalevents.xml";
-
-
+	wxString s = wxFileName::GetPathSeparator();
+	wxString filename = tidal_events_path + s + "tidalevents.xml";
 
 	wxTextFile myXML(filename);
 	if(!myXML.Exists())
