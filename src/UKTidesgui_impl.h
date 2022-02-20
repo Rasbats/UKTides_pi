@@ -53,6 +53,8 @@
 #include <list>
 #include <vector>
 
+#include "wx/defs.h"
+
 #ifdef __OCPN__ANDROID__
 #include <qopengl.h>
 #include "gl_private.h"

@@ -1232,9 +1232,7 @@ void Dlg::RemoveOldDownloads( ) {
 }
 
 void Dlg::RemoveSavedPort(wxString myStation) {
-	
-	wxMessageBox("here");
-	
+		
 	if (mySavedPorts.empty()) {
 		wxMessageBox(_("No saved tidal stations. Please load"));
 		return;
