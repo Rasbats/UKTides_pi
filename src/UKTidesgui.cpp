@@ -30,28 +30,6 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 
 	bSizerMain->Add( sbSizerDateTime, 0, wxEXPAND, 5 );
 
-	wxStaticBoxSizer* sbSizerFolder;
-	sbSizerFolder = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Port Locations") ), wxVERTICAL );
-
-	m_buttonDownload = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _(" Download  "), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerFolder->Add( m_buttonDownload, 0, wxALL|wxEXPAND, 5 );
-
-	m_stUKDownloadInfo = new wxStaticText( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Status:   Standby"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_stUKDownloadInfo->Wrap( -1 );
-	sbSizerFolder->Add( m_stUKDownloadInfo, 0, wxALL|wxEXPAND, 5 );
-
-	m_buttonSaved = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Show Saved"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerFolder->Add( m_buttonSaved, 0, wxALL|wxEXPAND, 5 );
-
-	m_buttonSaved1 = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Remove Icons"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerFolder->Add( m_buttonSaved1, 0, wxALL|wxEXPAND, 5 );
-
-	m_staticline2 = new wxStaticLine( sbSizerFolder->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	sbSizerFolder->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
-
-
-	bSizerMain->Add( sbSizerFolder, 0, wxEXPAND, 5 );
-
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
 
@@ -68,6 +46,31 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 
 	bSizerMain->Add( bSizer5, 1, wxEXPAND, 5 );
 
+	wxStaticBoxSizer* sbSizerFolder;
+	sbSizerFolder = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Tidal Stations") ), wxVERTICAL );
+
+	m_staticline2 = new wxStaticLine( sbSizerFolder->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	sbSizerFolder->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
+
+	m_buttonDownload = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _(" Download  "), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerFolder->Add( m_buttonDownload, 0, wxALL|wxEXPAND, 5 );
+
+	m_stUKDownloadInfo = new wxStaticText( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Status:   Standby"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_stUKDownloadInfo->Wrap( -1 );
+	sbSizerFolder->Add( m_stUKDownloadInfo, 0, wxALL|wxEXPAND, 5 );
+
+	m_buttonSaved = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Show Saved"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerFolder->Add( m_buttonSaved, 0, wxALL|wxEXPAND, 5 );
+
+	m_buttonSaved1 = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Remove Icons \n OTHER THAN saved"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerFolder->Add( m_buttonSaved1, 0, wxALL|wxEXPAND, 5 );
+
+	m_buttonSaved11 = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Remove ALL Icons"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerFolder->Add( m_buttonSaved11, 0, wxALL|wxEXPAND, 5 );
+
+
+	bSizerMain->Add( sbSizerFolder, 0, wxEXPAND, 5 );
+
 
 	this->SetSizer( bSizerMain );
 	this->Layout();
@@ -80,6 +83,7 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	m_buttonDownload->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnDownload ), NULL, this );
 	m_buttonSaved->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnGetSavedTides ), NULL, this );
 	m_buttonSaved1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::DoRemovePortIcons ), NULL, this );
+	m_buttonSaved11->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::DoRemoveAllPortIcons ), NULL, this );
 }
 
 DlgDef::~DlgDef()
@@ -89,5 +93,6 @@ DlgDef::~DlgDef()
 	m_buttonDownload->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnDownload ), NULL, this );
 	m_buttonSaved->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::OnGetSavedTides ), NULL, this );
 	m_buttonSaved1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::DoRemovePortIcons ), NULL, this );
+	m_buttonSaved11->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DlgDef::DoRemoveAllPortIcons ), NULL, this );
 
 }

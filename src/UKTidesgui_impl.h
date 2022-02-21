@@ -100,6 +100,7 @@ public:
         void OnDownload( wxCommandEvent& event );	
 		void OnGetSavedTides(wxCommandEvent& event);
 		void DoRemovePortIcons(wxCommandEvent& event);
+		void DoRemoveAllPortIcons(wxCommandEvent& event);
 
 		void OnInformation(wxCommandEvent& event);
         void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);	
@@ -152,6 +153,7 @@ public:
 		PlugIn_ViewPort  *m_vp;
 
 		piDC *m_dc;
+		bool b_HideButtons;
 
 private:
 	

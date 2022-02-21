@@ -620,27 +620,21 @@ void Dlg::OnGetSavedTides(wxCommandEvent& event) {
 }
 
 void Dlg::DoRemovePortIcons(wxCommandEvent& event) {
+			
+	b_clearSavedIcons = false;
+	b_clearAllIcons = true;
+	RequestRefresh(m_parent);
 	
-	wxMessageDialog KeepSavedIcons(NULL,
-		"Keep saved station locations", "Remove Icons",
-		wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION);	
-	
-	switch (KeepSavedIcons.ShowModal()) {
-		case wxID_YES: {			
-			b_clearSavedIcons = false;
-			b_clearAllIcons = true;
-			RequestRefresh(m_parent);
-			break; 
-		}
-		case wxID_NO: {
-			b_clearSavedIcons = true;
-			b_clearAllIcons = true;
-			RequestRefresh(m_parent);
-			break;
-		}
-		default:       wxLogMessage("Error: UKTides-Unexpected wxMessageDialog return code!");
-	}
 }
+
+void Dlg::DoRemoveAllPortIcons(wxCommandEvent& event) {
+		
+	b_clearSavedIcons = true;
+	b_clearAllIcons = true;
+	RequestRefresh(m_parent);
+	
+}
+
 
 void Dlg::getHWLW(string id)
 {
@@ -743,7 +737,7 @@ void Dlg::getHWLW(string id)
 	mySavedPorts.push_back(mySavedPort);
 
 	SaveTidalEventsToXml(mySavedPorts);
-
+	b_HideButtons = true;
 	OnShow();
 }
 
@@ -759,6 +753,11 @@ void Dlg::OnShow(void)
 		wxString label = m_titlePortName + _("      (Times are UTC)  ") + _(" (Height in metres)");
 		tidetable->itemStaticBoxSizer14Static->SetLabel(label);
 
+		if (b_HideButtons) {
+			tidetable->m_bDelete->Hide();
+			tidetable->m_bDeleteAll->Hide();
+		}
+		
 		//tidetable->theDialog = this;
 
 		wxString Event;
@@ -813,7 +812,10 @@ void Dlg::OnShowSavedPortTides(wxString thisPortId) {
 	wxString EventDT;
 	wxString EventHeight;
 
-	
+
+	tidetable->m_bDelete->Show();
+	tidetable->m_bDeleteAll->Show();
+		
 
 	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
 
@@ -899,14 +901,20 @@ void Dlg::getPort(double m_lat, double m_lon) {
 		
 			if (m_portId == portId) {
 				
-				mdlg = new wxMessageDialog(this, _("In the saved list \n\nYES: Removes the saved port \nDownload for new tidal data \n\nNO: Use the saved list"),
+				int dialog_return_value = wxNO;
+				mdlg = new wxMessageDialog(this, _("In the saved list \n\nYES: Removes the saved port\n\nNO: Updates the data for this station"),
 					_("Saved Port"), wxYES | wxNO | wxICON_WARNING);
-				if (mdlg->ShowModal() == wxID_YES) {
-					RemoveSavedPort(portName);				
-				}	
-				//wxMessageBox(_("In the saved list \n\nPlease Download and select the port again \nfor new tidal data"), _("Saved port"));
+				dialog_return_value = mdlg->ShowModal();
+				switch(dialog_return_value){
+					case wxID_YES :
+					  RemoveSavedPort(portName);
+					  break;
+					case wxID_NO :	
+					  b_HideButtons = true;
+					  OnShow();
+					  break;					
+				};
 				foundPort = true;
-				break;
 			}
 		}
 		if (foundPort)return;
