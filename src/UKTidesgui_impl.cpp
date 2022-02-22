@@ -902,22 +902,21 @@ void Dlg::getPort(double m_lat, double m_lon) {
 			if (m_portId == portId) {
 				
 				int dialog_return_value = wxNO;
-				mdlg = new wxMessageDialog(this, _("In the saved list \n\nYES: Removes the saved port\n\nNO: Shows the data for this station.\n     Updates if online"),
-					_("Saved Port"), wxYES | wxNO | wxICON_WARNING);
+				mdlg = new wxMessageDialog(this, _("In the saved list \n\nOK: Shows the data for this station.\n\n     Updates the data if online"),
+					_("Saved Port"), wxOK_DEFAULT | wxCANCEL | wxICON_WARNING);
 				dialog_return_value = mdlg->ShowModal();
 				switch(dialog_return_value){
-					case wxID_YES :
-					  RemoveSavedPort(portName);
+					case wxID_OK :
+					 b_HideButtons = true;
+					 OnShow();
+					 break;	
+					case wxID_CANCEL :						
 					  break;
-					case wxID_NO :	
-					  b_HideButtons = true;
-					  OnShow();
-					  break;					
 				};
 				foundPort = true;
 			}
 		}
-		if (foundPort)return;
+		if (foundPort)return;		
 	}
 	
 	getHWLW(m_portId.ToStdString());
