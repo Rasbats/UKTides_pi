@@ -283,7 +283,7 @@ void UKTides_pi::OnToolbarToolCallback(int id)
       //    Toggle dialog? 
       if(m_bShowUKTides) {		  
           m_pDialog->Show();
-		  m_pDialog->b_clearAllIcons = false;
+		  m_pDialog->b_clearAllIcons = true;
 		  m_pDialog->b_clearSavedIcons = false;
 
 	  }

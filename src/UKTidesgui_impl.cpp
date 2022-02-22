@@ -800,7 +800,7 @@ void Dlg::OnShow(void)
 }
 
 void Dlg::OnShowSavedPortTides(wxString thisPortId) {
-
+	
 	if (mySavedPorts.empty()) {
 		wxMessageBox(_("No tidal data found. Please download the locations \n and use right click to select the UK tidal station"));
 		return;
@@ -902,7 +902,7 @@ void Dlg::getPort(double m_lat, double m_lon) {
 			if (m_portId == portId) {
 				
 				int dialog_return_value = wxNO;
-				mdlg = new wxMessageDialog(this, _("In the saved list \n\nYES: Removes the saved port\n\nNO: Updates the data for this station"),
+				mdlg = new wxMessageDialog(this, _("In the saved list \n\nYES: Removes the saved port\n\nNO: Shows the data for this station.\n     Updates if online"),
 					_("Saved Port"), wxYES | wxNO | wxICON_WARNING);
 				dialog_return_value = mdlg->ShowModal();
 				switch(dialog_return_value){
@@ -1257,6 +1257,7 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 			if ((*it).Name == myStation) {
 					
 				mySavedPorts.erase(it);
+				SaveTidalEventsToXml(mySavedPorts);
 				break;
 			}
 			else {
@@ -1264,7 +1265,7 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 			}
 		}
 	}
-	SaveTidalEventsToXml(mySavedPorts);
+	
 	GetParent()->Refresh();
 }
 
