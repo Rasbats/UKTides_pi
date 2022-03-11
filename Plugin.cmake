@@ -46,7 +46,7 @@ Show UK Tides (HW/LW) at over 600 ports.
 
 set(PKG_AUTHOR "Mike Rossiter")
 set(PKG_IS_OPEN_SOURCE "yes")
-set(PKG_HOMEPAGE https://github.com/Rasbats/uktides_pi)
+set(PKG_HOMEPAGE https://github.com/Rasbats/UKTides_pi)
 set(PKG_INFO_URL https://opencpn.org/OpenCPN/plugins/uktides.html)
 
 set(SRC

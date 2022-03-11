@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct 26 2018)
+// C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -12,8 +12,8 @@
 DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-	this->SetForegroundColour( wxColour( 0, 0, 0 ) );
-	this->SetBackgroundColour( wxColour( 255, 255, 255 ) );
+	this->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
+	this->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
 
 	wxBoxSizer* bSizerMain;
 	bSizerMain = new wxBoxSizer( wxVERTICAL );
@@ -23,7 +23,7 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 
 	m_stTimeZone = new wxStaticText( sbSizerDateTime->GetStaticBox(), wxID_ANY, _("All times UTC"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_stTimeZone->Wrap( -1 );
-	m_stTimeZone->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+	m_stTimeZone->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Arial") ) );
 
 	sbSizerDateTime->Add( m_stTimeZone, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
 
@@ -35,6 +35,8 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 
 	m_staticText9 = new wxStaticText( this, wxID_ANY, _("Days ahead: "), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText9->Wrap( -1 );
+	m_staticText9->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) );
+
 	bSizer5->Add( m_staticText9, 0, wxALL, 5 );
 
 	wxString m_choice3Choices[] = { _("1"), _("2"), _("3"), _("4"), _("5"), _("6"), _("7") };
@@ -57,6 +59,8 @@ DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 
 	m_stUKDownloadInfo = new wxStaticText( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Status:   Standby"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_stUKDownloadInfo->Wrap( -1 );
+	m_stUKDownloadInfo->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) );
+
 	sbSizerFolder->Add( m_stUKDownloadInfo, 0, wxALL|wxEXPAND, 5 );
 
 	m_buttonSaved = new wxButton( sbSizerFolder->GetStaticBox(), wxID_ANY, _("Show Saved"), wxDefaultPosition, wxDefaultSize, 0 );
