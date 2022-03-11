@@ -410,24 +410,16 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 	wxString tmp_file = wxFileName::CreateTempFileName("");
 
 	_OCPN_DLStatus ret = OCPN_downloadFile(url.BuildURI(), tmp_file,
-		"UKTides", "", wxNullBitmap, this,
-		OCPN_DLDS_ELAPSED_TIME | OCPN_DLDS_ESTIMATED_TIME | OCPN_DLDS_REMAINING_TIME | OCPN_DLDS_SPEED | OCPN_DLDS_SIZE | OCPN_DLDS_CAN_PAUSE | OCPN_DLDS_CAN_ABORT | OCPN_DLDS_AUTO_CLOSE,
+		"", "", wxNullBitmap, this, OCPN_DLDS_AUTO_CLOSE,
 		10);
-
-	if (ret == OCPN_DL_ABORTED) {
-
-		m_stUKDownloadInfo->SetLabel(_("Aborted"));
-		return;
-	} else
 
 	if (ret == OCPN_DL_FAILED) {
 		wxMessageBox(_("Download failed.\n\nAre you connected to the Internet?"));
 
 		m_stUKDownloadInfo->SetLabel(_("Failed"));
 		return;
-	}
-
-	else {
+	} else 
+	{
 		m_stUKDownloadInfo->SetLabel(_("Success"));
 	}
 
@@ -436,13 +428,13 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 	fileData.Open(tmp_file, wxT("r"));
 	fileData.ReadAll(&message_body);
 
-	
+	// construct the JSON root object
 	Json::Value value;
 	string errors;
 		// construct a JSON parser
 	Json::Reader reader;
 
-	bool parsingSuccessful = reader.parse((std::string)message_body, value, &errors);	
+	bool parsingSuccessful = reader.parse((std::string)message_body, value);	
 	
 	wxString error = _("No tidal stations found");
 

@@ -395,3 +395,8 @@ void UKTides_pi::SetCursorLatLon(double lat, double lon)
 	m_cursor_lat = lat;
 	m_cursor_lon = lon;
 }
+
+void UKTides_pi::OnClose(wxCloseEvent& event)
+{
+	plugin->OnUKTidesDialogClose();
+}
