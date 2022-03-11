@@ -81,6 +81,9 @@ macro(late_init)
 
   add_definitions(-DocpnUSE_GL)
 
+  add_definitions(-DMAKING_PLUGIN)  
+
+
   if (QT_ANDROID)
     add_definitions(-DUSE_ANDROID_GLES2)
   endif ()
