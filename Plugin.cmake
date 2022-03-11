@@ -34,7 +34,7 @@ option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 # -------  Plugin setup --------
 #
 set(PKG_NAME UKTides_pi)
-set(PKG_VERSION  1.2.0)
+set(PKG_VERSION  1.1.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME UKTides)    # Dialogs, installer artifacts, ...
@@ -46,7 +46,7 @@ Show UK Tides (HW/LW) at over 600 ports.
 
 set(PKG_AUTHOR "Mike Rossiter")
 set(PKG_IS_OPEN_SOURCE "yes")
-set(PKG_HOMEPAGE https://github.com/Rasbats/UKTides_pi)
+set(PKG_HOMEPAGE https://github.com/Rasbats/uktides_pi)
 set(PKG_INFO_URL https://opencpn.org/OpenCPN/plugins/uktides.html)
 
 set(SRC
@@ -70,7 +70,7 @@ set(SRC
 
 )
 
-set(PKG_API_LIB api-17)  #  A directory in libs/ e. g., api-17 or api-16
+set(PKG_API_LIB api-16)  #  A directory in libs/ e. g., api-17 or api-16
 
 macro(late_init)
   # Perform initialization after the PACKAGE_NAME library, compilers
@@ -81,9 +81,6 @@ macro(late_init)
 
   add_definitions(-DocpnUSE_GL)
 
-  add_definitions(-DMAKING_PLUGIN)  
-
-
   if (QT_ANDROID)
     add_definitions(-DUSE_ANDROID_GLES2)
   endif ()
@@ -93,6 +90,9 @@ macro(add_plugin_libraries)
   # Add libraries required by this plugin
   add_subdirectory("libs/tinyxml")
   target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
+
+  add_subdirectory("libs/wxJSON")
+  target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
 
   add_subdirectory("libs/plugingl")
   target_link_libraries(${PACKAGE_NAME} ocpn::plugingl)

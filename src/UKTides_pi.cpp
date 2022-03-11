@@ -69,7 +69,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 //---------------------------------------------------------------------------------------------------------
 
 UKTides_pi::UKTides_pi(void *ppimgr)
-      :opencpn_plugin_117 (ppimgr)
+      :opencpn_plugin_116 (ppimgr)
 {
 		// Create the PlugIn icons
 	initialize_images();
@@ -283,7 +283,7 @@ void UKTides_pi::OnToolbarToolCallback(int id)
       //    Toggle dialog? 
       if(m_bShowUKTides) {		  
           m_pDialog->Show();
-		  m_pDialog->b_clearAllIcons = true;
+		  m_pDialog->b_clearAllIcons = false;
 		  m_pDialog->b_clearSavedIcons = false;
 
 	  }
@@ -394,9 +394,4 @@ void UKTides_pi::SetCursorLatLon(double lat, double lon)
 {
 	m_cursor_lat = lat;
 	m_cursor_lon = lon;
-}
-
-void UKTides_pi::OnClose(wxCloseEvent& event)
-{
-	plugin->OnUKTidesDialogClose();
 }

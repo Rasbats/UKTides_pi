@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
+// C++ code generated with wxFormBuilder (version Oct 26 2018)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -18,12 +18,12 @@
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
-#include <wx/choice.h>
-#include <wx/statline.h>
-#include <wx/button.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/button.h>
+#include <wx/statline.h>
+#include <wx/choice.h>
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -37,16 +37,15 @@ class DlgDef : public wxFrame
 	private:
 
 	protected:
+		wxStaticLine* m_staticline2;
 		wxStaticText* m_staticText9;
 		wxChoice* m_choice3;
-		wxStaticLine* m_staticline2;
 
-		// Virtual event handlers, override them in your derived class
+		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnDownload( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnGetSavedTides( wxCommandEvent& event ) { event.Skip(); }
 		virtual void DoRemovePortIcons( wxCommandEvent& event ) { event.Skip(); }
-		virtual void DoRemoveAllPortIcons( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
@@ -55,7 +54,6 @@ class DlgDef : public wxFrame
 		wxStaticText* m_stUKDownloadInfo;
 		wxButton* m_buttonSaved;
 		wxButton* m_buttonSaved1;
-		wxButton* m_buttonSaved11;
 
 		DlgDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("UK Tides"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxCLOSE_BOX|wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxRESIZE_BORDER|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
 

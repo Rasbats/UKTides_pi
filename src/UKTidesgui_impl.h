@@ -53,8 +53,6 @@
 #include <list>
 #include <vector>
 
-#include "wx/defs.h"
-
 #ifdef __OCPN__ANDROID__
 #include <qopengl.h>
 #include "gl_private.h"
@@ -100,7 +98,6 @@ public:
         void OnDownload( wxCommandEvent& event );	
 		void OnGetSavedTides(wxCommandEvent& event);
 		void DoRemovePortIcons(wxCommandEvent& event);
-		void DoRemoveAllPortIcons(wxCommandEvent& event);
 
 		void OnInformation(wxCommandEvent& event);
         void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);	
@@ -153,7 +150,6 @@ public:
 		PlugIn_ViewPort  *m_vp;
 
 		piDC *m_dc;
-		bool b_HideButtons;
 
 private:
 	
@@ -163,7 +159,7 @@ private:
 	list<TidalEvent>myevents;
 	list<TidalEvent>mySavedEvents;
 
-	myPort SavePortTidalEvents(list<TidalEvent>myevents, string portId);
+	myPort SavePortTidalEvents(list<TidalEvent>myEvents, string portId);
 	void SaveTidalEventsToXml(list<myPort>myPorts);
 
 	list<myPort> LoadTidalEventsFromXml();

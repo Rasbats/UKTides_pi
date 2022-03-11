@@ -54,7 +54,7 @@ class Dlg;
 
 #define UKTIDES_TOOL_POSITION    -1          // Request default positioning of toolbar tool
 
-class UKTides_pi : public opencpn_plugin_117
+class UKTides_pi : public opencpn_plugin_116
 {
 public:
       UKTides_pi(void *ppimgr);

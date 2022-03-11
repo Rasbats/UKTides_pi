@@ -410,16 +410,24 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 	wxString tmp_file = wxFileName::CreateTempFileName("");
 
 	_OCPN_DLStatus ret = OCPN_downloadFile(url.BuildURI(), tmp_file,
-		"", "", wxNullBitmap, this, OCPN_DLDS_AUTO_CLOSE,
+		"UKTides", "", wxNullBitmap, this,
+		OCPN_DLDS_ELAPSED_TIME | OCPN_DLDS_ESTIMATED_TIME | OCPN_DLDS_REMAINING_TIME | OCPN_DLDS_SPEED | OCPN_DLDS_SIZE | OCPN_DLDS_CAN_PAUSE | OCPN_DLDS_CAN_ABORT | OCPN_DLDS_AUTO_CLOSE,
 		10);
+
+	if (ret == OCPN_DL_ABORTED) {
+
+		m_stUKDownloadInfo->SetLabel(_("Aborted"));
+		return;
+	} else
 
 	if (ret == OCPN_DL_FAILED) {
 		wxMessageBox(_("Download failed.\n\nAre you connected to the Internet?"));
 
 		m_stUKDownloadInfo->SetLabel(_("Failed"));
 		return;
-	} else 
-	{
+	}
+
+	else {
 		m_stUKDownloadInfo->SetLabel(_("Success"));
 	}
 
@@ -428,13 +436,16 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 	fileData.Open(tmp_file, wxT("r"));
 	fileData.ReadAll(&message_body);
 
-	// construct the JSON root object
+	Json::CharReaderBuilder builder;
+	Json::CharReader* reader = builder.newCharReader();
+
+	wxString message_id;
 	Json::Value value;
 	string errors;
-		// construct a JSON parser
-	Json::Reader reader;
 
-	bool parsingSuccessful = reader.parse((std::string)message_body, value);	
+	bool parsingSuccessful = reader->parse(message_body.c_str(),
+		message_body.c_str() + message_body.size(), &value, &errors);
+	delete reader;
 	
 	wxString error = _("No tidal stations found");
 
@@ -609,21 +620,27 @@ void Dlg::OnGetSavedTides(wxCommandEvent& event) {
 }
 
 void Dlg::DoRemovePortIcons(wxCommandEvent& event) {
-			
-	b_clearSavedIcons = false;
-	b_clearAllIcons = true;
-	RequestRefresh(m_parent);
 	
-}
-
-void Dlg::DoRemoveAllPortIcons(wxCommandEvent& event) {
-		
-	b_clearSavedIcons = true;
-	b_clearAllIcons = true;
-	RequestRefresh(m_parent);
+	wxMessageDialog KeepSavedIcons(NULL,
+		"Keep saved station locations", "Remove Icons",
+		wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION);	
 	
+	switch (KeepSavedIcons.ShowModal()) {
+		case wxID_YES: {			
+			b_clearSavedIcons = false;
+			b_clearAllIcons = true;
+			RequestRefresh(m_parent);
+			break; 
+		}
+		case wxID_NO: {
+			b_clearSavedIcons = true;
+			b_clearAllIcons = true;
+			RequestRefresh(m_parent);
+			break;
+		}
+		default:       wxLogMessage("Error: UKTides-Unexpected wxMessageDialog return code!");
+	}
 }
-
 
 void Dlg::getHWLW(string id)
 {
@@ -654,6 +671,9 @@ void Dlg::getHWLW(string id)
 	wxFFile fileData;
 	fileData.Open(tmp_file, wxT("r"));
 	fileData.ReadAll(&myjson);
+
+	Json::CharReaderBuilder builder;
+	Json::CharReader* reader = builder.newCharReader();
 
 	// construct the JSON root object
 	Json::Value  root2;
@@ -723,7 +743,7 @@ void Dlg::getHWLW(string id)
 	mySavedPorts.push_back(mySavedPort);
 
 	SaveTidalEventsToXml(mySavedPorts);
-	b_HideButtons = true;
+
 	OnShow();
 }
 
@@ -739,11 +759,6 @@ void Dlg::OnShow(void)
 		wxString label = m_titlePortName + _("      (Times are UTC)  ") + _(" (Height in metres)");
 		tidetable->itemStaticBoxSizer14Static->SetLabel(label);
 
-		if (b_HideButtons) {
-			tidetable->m_bDelete->Hide();
-			tidetable->m_bDeleteAll->Hide();
-		}
-		
 		//tidetable->theDialog = this;
 
 		wxString Event;
@@ -786,7 +801,7 @@ void Dlg::OnShow(void)
 }
 
 void Dlg::OnShowSavedPortTides(wxString thisPortId) {
-	
+
 	if (mySavedPorts.empty()) {
 		wxMessageBox(_("No tidal data found. Please download the locations \n and use right click to select the UK tidal station"));
 		return;
@@ -798,10 +813,7 @@ void Dlg::OnShowSavedPortTides(wxString thisPortId) {
 	wxString EventDT;
 	wxString EventHeight;
 
-
-	tidetable->m_bDelete->Show();
-	tidetable->m_bDeleteAll->Show();
-		
+	
 
 	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
 
@@ -887,22 +899,17 @@ void Dlg::getPort(double m_lat, double m_lon) {
 		
 			if (m_portId == portId) {
 				
-				int dialog_return_value = wxNO;
-				mdlg = new wxMessageDialog(this, _("In the saved list \n\nOK: Shows the data for this station.\n\n     Updates the data if online"),
-					_("Saved Port"), wxOK_DEFAULT | wxCANCEL | wxICON_WARNING);
-				dialog_return_value = mdlg->ShowModal();
-				switch(dialog_return_value){
-					case wxID_OK :
-					 b_HideButtons = true;
-					 OnShow();
-					 break;	
-					case wxID_CANCEL :						
-					  break;
-				};
+				mdlg = new wxMessageDialog(this, _("In the saved list \n\nYES: Removes the saved port \nDownload for new tidal data \n\nNO: Use the saved list"),
+					_("Saved Port"), wxYES | wxNO | wxICON_WARNING);
+				if (mdlg->ShowModal() == wxID_YES) {
+					RemoveSavedPort(portName);				
+				}	
+
 				foundPort = true;
+				break;
 			}
 		}
-		if (foundPort)return;		
+		if (foundPort)return;
 	}
 	
 	getHWLW(m_portId.ToStdString());
@@ -994,8 +1001,7 @@ wxString Dlg::StandardPath()
     wxString s = wxFileName::GetPathSeparator();
     wxString stdPath  = *GetpPrivateApplicationDataLocation();
 
-    stdPath += _T("plugins") + s + _T("UKTides_pi") + s + "data";
-
+    stdPath += s + _T("plugins") + s + _T("UKTides_pi") + s + "data";
     if (!wxDirExists(stdPath))
       wxMkdir(stdPath);
 
@@ -1003,7 +1009,7 @@ wxString Dlg::StandardPath()
 }
 
 
-myPort Dlg::SavePortTidalEvents(list<TidalEvent>myevents, string portId)
+myPort Dlg::SavePortTidalEvents(list<TidalEvent>myEvents, string portId)
 {
 	myPort thisPort;
 
@@ -1050,8 +1056,7 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	}
   
-	wxString s = wxFileName::GetPathSeparator();
-	wxString filename = tidal_events_path + s + "tidalevents.xml";
+	wxString filename = tidal_events_path + "/tidalevents.xml";
 
 
 	if (myPorts.size() == 0) {		
@@ -1225,7 +1230,7 @@ void Dlg::RemoveOldDownloads( ) {
 }
 
 void Dlg::RemoveSavedPort(wxString myStation) {
-		
+	
 	if (mySavedPorts.empty()) {
 		wxMessageBox(_("No saved tidal stations. Please load"));
 		return;
@@ -1235,22 +1240,17 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 		mySavedPorts.clear();
 	}
 	else {
-
-		
 		for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
 
 			if ((*it).Name == myStation) {
-					
 				mySavedPorts.erase(it);
-				SaveTidalEventsToXml(mySavedPorts);
-				break;
 			}
 			else {
 				it++;
 			}
 		}
 	}
-	
+	SaveTidalEventsToXml(mySavedPorts);
 	GetParent()->Refresh();
 }
 
