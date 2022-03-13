@@ -743,7 +743,7 @@ void Dlg::getHWLW(string id)
 	mySavedPorts.push_back(mySavedPort);
 
 	SaveTidalEventsToXml(mySavedPorts);
-
+	b_HideButtons = true;
 	OnShow();
 }
 
@@ -758,6 +758,11 @@ void Dlg::OnShow(void)
 		tidetable = new TideTable(this, 7000, _("Tides"), wxPoint(200, 200), wxSize(-1, -1), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
 		wxString label = m_titlePortName + _("      (Times are UTC)  ") + _(" (Height in metres)");
 		tidetable->itemStaticBoxSizer14Static->SetLabel(label);
+
+		if (b_HideButtons) {
+			tidetable->m_bDelete->Hide();
+			tidetable->m_bDeleteAll->Hide();
+		}
 
 		//tidetable->theDialog = this;
 
@@ -899,17 +904,22 @@ void Dlg::getPort(double m_lat, double m_lon) {
 		
 			if (m_portId == portId) {
 				
-				mdlg = new wxMessageDialog(this, _("In the saved list \n\nYES: Removes the saved port \nDownload for new tidal data \n\nNO: Use the saved list"),
-					_("Saved Port"), wxYES | wxNO | wxICON_WARNING);
-				if (mdlg->ShowModal() == wxID_YES) {
-					RemoveSavedPort(portName);				
-				}	
-
+				int dialog_return_value = wxNO;
+				mdlg = new wxMessageDialog(this, _("In the saved list \n\nOK: Shows the data for this station.\n\n     Updates the data if online"),
+					_("Saved Port"), wxOK_DEFAULT | wxCANCEL | wxICON_WARNING);
+				dialog_return_value = mdlg->ShowModal();
+				switch(dialog_return_value){
+					case wxID_OK :
+					 b_HideButtons = true;
+					 OnShow();
+					 break;	
+					case wxID_CANCEL :						
+					  break;
+				};
 				foundPort = true;
-				break;
 			}
 		}
-		if (foundPort)return;
+		if (foundPort)return;		
 	}
 	
 	getHWLW(m_portId.ToStdString());

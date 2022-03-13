@@ -150,6 +150,7 @@ public:
 		PlugIn_ViewPort  *m_vp;
 
 		piDC *m_dc;
+		bool b_HideButtons;
 
 private:
 	
