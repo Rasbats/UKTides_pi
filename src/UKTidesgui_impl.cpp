@@ -621,25 +621,19 @@ void Dlg::OnGetSavedTides(wxCommandEvent& event) {
 
 void Dlg::DoRemovePortIcons(wxCommandEvent& event) {
 	
-	wxMessageDialog KeepSavedIcons(NULL,
-		"Keep saved station locations", "Remove Icons",
-		wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION);	
+	b_clearSavedIcons = false;
+	b_clearAllIcons = true;
+	RequestRefresh(m_parent);
+
+}
+
+
+void Dlg::DoRemoveAllPortIcons(wxCommandEvent& event) {
+		
+	b_clearSavedIcons = true;
+	b_clearAllIcons = true;
+	RequestRefresh(m_parent);
 	
-	switch (KeepSavedIcons.ShowModal()) {
-		case wxID_YES: {			
-			b_clearSavedIcons = false;
-			b_clearAllIcons = true;
-			RequestRefresh(m_parent);
-			break; 
-		}
-		case wxID_NO: {
-			b_clearSavedIcons = true;
-			b_clearAllIcons = true;
-			RequestRefresh(m_parent);
-			break;
-		}
-		default:       wxLogMessage("Error: UKTides-Unexpected wxMessageDialog return code!");
-	}
 }
 
 void Dlg::getHWLW(string id)
