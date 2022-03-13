@@ -1254,13 +1254,15 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 
 			if ((*it).Name == myStation) {
 				mySavedPorts.erase(it);
+				SaveTidalEventsToXml(mySavedPorts);
+				break;
 			}
 			else {
 				it++;
 			}
 		}
 	}
-	SaveTidalEventsToXml(mySavedPorts);
+
 	GetParent()->Refresh();
 }
 
