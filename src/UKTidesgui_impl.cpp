@@ -123,8 +123,8 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
     Connect( wxEVT_MOTION, wxMouseEventHandler( Dlg::OnMouseEvent ) );
 #endif
 
-	LoadTidalEventsFromXml();
-	//RemoveOldDownloads();
+	
+	RemoveOldDownloads();
 
 	b_clearAllIcons = true;
 	b_clearSavedIcons = true;
@@ -1180,7 +1180,7 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 			}
 		}
 	}
-
+	
 	return mySavedPorts;
 
 }
@@ -1206,6 +1206,8 @@ wxString Dlg::GetDateStringNow() {
 }
 
 void Dlg::RemoveOldDownloads( ) {
+
+	LoadTidalEventsFromXml();
 	
 	if (mySavedPorts.size() == 0) {				
 		return;
@@ -1221,9 +1223,9 @@ void Dlg::RemoveOldDownloads( ) {
 	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
 		sddt = (*it).DownloadDate;
 		ddt.ParseDateTime(sddt);
-		ddt.Add(DaySpan);
+		wxDateTime dtx = ddt.Add(DaySpan);
 
-		if (dtn > ddt) {
+		if (dtn > dtx) {
 			mySavedPorts.erase((it));
 		}
 	}
