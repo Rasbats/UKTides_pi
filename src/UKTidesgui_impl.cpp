@@ -1228,10 +1228,6 @@ void Dlg::RemoveOldDownloads( ) {
 	}
 	
 	SaveTidalEventsToXml(mySavedPorts);
-
-	b_clearAllIcons = true;
-	b_clearSavedIcons = true;
-
 	GetParent()->Refresh();
 
 }
