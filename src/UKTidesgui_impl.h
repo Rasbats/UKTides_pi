@@ -152,6 +152,8 @@ public:
 
 		piDC *m_dc;
 		bool b_HideButtons;
+		void RemoveOldDownloads();
+
 
 private:
 	
@@ -168,7 +170,6 @@ private:
 
 	double AttributeDouble(TiXmlElement *e, const char *name, double def);
 	wxString GetDateStringNow();
-	void RemoveOldDownloads();
 	
 
 	void getHWLW(string id);

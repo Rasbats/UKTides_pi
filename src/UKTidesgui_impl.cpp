@@ -122,9 +122,6 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
     GetHandle()->setStyleSheet( qtStyleSheet);
     Connect( wxEVT_MOTION, wxMouseEventHandler( Dlg::OnMouseEvent ) );
 #endif
-
-	
-	RemoveOldDownloads();	
 }
 
 Dlg::~Dlg()
