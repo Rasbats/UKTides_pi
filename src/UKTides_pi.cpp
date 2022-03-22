@@ -274,8 +274,8 @@ void UKTides_pi::OnToolbarToolCallback(int id)
 			m_pDialog->b_clearAllIcons = false;
 			m_pDialog->b_clearSavedIcons = false;
 						
-      }
-
+	}
+	
 	  m_pDialog->Fit();
 	  //Toggle 
 	  m_bShowUKTides = !m_bShowUKTides;	  

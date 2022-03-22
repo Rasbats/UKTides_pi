@@ -389,7 +389,9 @@ void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString
 }
 
 void Dlg::OnDownload(wxCommandEvent& event) {
-
+			
+	RemoveOldDownloads();	
+	
 	b_clearSavedIcons = false;
 	b_clearAllIcons = false;
 
