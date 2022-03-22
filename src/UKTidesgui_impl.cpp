@@ -124,10 +124,7 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 #endif
 
 	
-	RemoveOldDownloads();
-
-	b_clearAllIcons = true;
-	b_clearSavedIcons = true;
+	RemoveOldDownloads();	
 }
 
 Dlg::~Dlg()
@@ -1231,6 +1228,10 @@ void Dlg::RemoveOldDownloads( ) {
 	}
 	
 	SaveTidalEventsToXml(mySavedPorts);
+
+	b_clearAllIcons = true;
+	b_clearSavedIcons = true;
+
 	GetParent()->Refresh();
 
 }
