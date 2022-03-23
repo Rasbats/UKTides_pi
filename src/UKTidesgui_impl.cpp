@@ -397,7 +397,7 @@ void Dlg::OnDownload(wxCommandEvent& event) {
 
 	wxString s_lat, s_lon;
 
-	wxString urlString = "https://admiraltyapi.azure-api.net/uktidalapi/api/V1/Stations?key=29f375e044ff41b39340da20d50bc6a7";
+	wxString urlString = "https://admiraltyapi.azure-api.net/uktidalapi/api/V1/Stations?key=cefba1163a81498c9a1e5d03ea1fed69";
 	wxURI url(urlString);
 
 	wxString tmp_file = wxFileName::CreateTempFileName("");
