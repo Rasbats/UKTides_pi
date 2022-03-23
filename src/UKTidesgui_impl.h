@@ -191,9 +191,7 @@ private:
 	wxFont *pTCFont;
 	wxColour m_text_color;
 	std::map < double, wxImage > m_labelCache;
-	std::map < wxString, wxImage > m_labelCacheText;
-
-	
+	std::map < wxString, wxImage > m_labelCacheText;	
 	
 };
 

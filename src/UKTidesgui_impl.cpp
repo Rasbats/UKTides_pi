@@ -62,7 +62,7 @@ wxWindow *g_Window;
 
 
 class Position;
-class myPort;
+
 
 static int texture_format;
 static bool glQueried = false;
@@ -389,12 +389,9 @@ void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString
 }
 
 void Dlg::OnDownload(wxCommandEvent& event) {
-			
+		
 	RemoveOldDownloads();	
 	
-	b_clearSavedIcons = false;
-	b_clearAllIcons = false;
-
 	myports.clear();
 	myPort outPort;
 
@@ -1216,14 +1213,14 @@ void Dlg::RemoveOldDownloads( ) {
 
 	dtn = wxDateTime::Now();
 
-	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
+	for (auto& it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
 		sddt = (*it).DownloadDate;
 		ddt.ParseDateTime(sddt);
 		wxDateTime dtx = ddt.Add(DaySpan);
 
 		if (dtn > dtx) {
-			mySavedPorts.erase((it));
-		}
+			mySavedPorts.erase(it);
+		}	
 	}
 	
 	SaveTidalEventsToXml(mySavedPorts);
