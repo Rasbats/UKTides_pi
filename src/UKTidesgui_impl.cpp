@@ -389,9 +389,9 @@ void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString
 }
 
 void Dlg::OnDownload(wxCommandEvent& event) {
-		
+			
 	RemoveOldDownloads();	
-	
+
 	myports.clear();
 	myPort outPort;
 
@@ -1213,14 +1213,14 @@ void Dlg::RemoveOldDownloads( ) {
 
 	dtn = wxDateTime::Now();
 
-	for (auto& it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
+	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
 		sddt = (*it).DownloadDate;
 		ddt.ParseDateTime(sddt);
 		wxDateTime dtx = ddt.Add(DaySpan);
 
 		if (dtn > dtx) {
 			mySavedPorts.erase(it);
-		}	
+		}
 	}
 	
 	SaveTidalEventsToXml(mySavedPorts);
