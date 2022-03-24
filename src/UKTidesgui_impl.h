@@ -152,8 +152,6 @@ public:
 
 		piDC *m_dc;
 		bool b_HideButtons;
-		void RemoveOldDownloads();
-
 
 private:
 	
@@ -170,6 +168,7 @@ private:
 
 	double AttributeDouble(TiXmlElement *e, const char *name, double def);
 	wxString GetDateStringNow();
+	void RemoveOldDownloads();
 	
 
 	void getHWLW(string id);
@@ -191,7 +190,9 @@ private:
 	wxFont *pTCFont;
 	wxColour m_text_color;
 	std::map < double, wxImage > m_labelCache;
-	std::map < wxString, wxImage > m_labelCacheText;	
+	std::map < wxString, wxImage > m_labelCacheText;
+
+	
 	
 };
 

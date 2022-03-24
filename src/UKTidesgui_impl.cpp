@@ -62,7 +62,7 @@ wxWindow *g_Window;
 
 
 class Position;
-
+class myPort;
 
 static int texture_format;
 static bool glQueried = false;
@@ -122,6 +122,12 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
     GetHandle()->setStyleSheet( qtStyleSheet);
     Connect( wxEVT_MOTION, wxMouseEventHandler( Dlg::OnMouseEvent ) );
 #endif
+
+	LoadTidalEventsFromXml();
+	RemoveOldDownloads();
+
+	b_clearAllIcons = true;
+	b_clearSavedIcons = true;
 }
 
 Dlg::~Dlg()
@@ -389,15 +395,16 @@ void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString
 }
 
 void Dlg::OnDownload(wxCommandEvent& event) {
-			
-	RemoveOldDownloads();	
+
+	b_clearSavedIcons = false;
+	b_clearAllIcons = false;
 
 	myports.clear();
 	myPort outPort;
 
 	wxString s_lat, s_lon;
 
-	wxString urlString = "https://admiraltyapi.azure-api.net/uktidalapi/api/V1/Stations?key=cefba1163a81498c9a1e5d03ea1fed69";
+	wxString urlString = "https://admiraltyapi.azure-api.net/uktidalapi/api/V1/Stations?key=29f375e044ff41b39340da20d50bc6a7";
 	wxURI url(urlString);
 
 	wxString tmp_file = wxFileName::CreateTempFileName("");
@@ -1053,8 +1060,7 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	}
   
-	wxString filename = tidal_events_path + "/tidalevents.xml";
-
+	wxString filename = tidal_events_path + "/tidalevents.xml";	
 
 	if (myPorts.size() == 0) {		
 		wxTextFile myXML(filename);
@@ -1173,7 +1179,7 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 			}
 		}
 	}
-	
+
 	return mySavedPorts;
 
 }
@@ -1199,8 +1205,6 @@ wxString Dlg::GetDateStringNow() {
 }
 
 void Dlg::RemoveOldDownloads( ) {
-
-	LoadTidalEventsFromXml();
 	
 	if (mySavedPorts.size() == 0) {				
 		return;
@@ -1216,10 +1220,10 @@ void Dlg::RemoveOldDownloads( ) {
 	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end(); it++) {
 		sddt = (*it).DownloadDate;
 		ddt.ParseDateTime(sddt);
-		wxDateTime dtx = ddt.Add(DaySpan);
+		ddt.Add(DaySpan);
 
-		if (dtn > dtx) {
-			mySavedPorts.erase(it);
+		if (dtn > ddt) {
+			mySavedPorts.erase((it));
 		}
 	}
 	
@@ -1229,7 +1233,7 @@ void Dlg::RemoveOldDownloads( ) {
 }
 
 void Dlg::RemoveSavedPort(wxString myStation) {
-	
+
 	if (mySavedPorts.empty()) {
 		wxMessageBox(_("No saved tidal stations. Please load"));
 		return;
@@ -1237,11 +1241,11 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 
 	if (mySavedPorts.size() == 1) {
 		mySavedPorts.clear();
+		SaveTidalEventsToXml(mySavedPorts);
 	}
 	else {
 		for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
-
-			if ((*it).Name == myStation) {
+			if ((*it).Name == myStation) {				
 				mySavedPorts.erase(it);
 				SaveTidalEventsToXml(mySavedPorts);
 				break;
