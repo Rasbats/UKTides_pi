@@ -1221,9 +1221,11 @@ void Dlg::RemoveOldDownloads( ) {
 		sddt = (*it).DownloadDate;
 		ddt.ParseDateTime(sddt);
 		ddt.Add(DaySpan);
-
-		if (dtn > ddt) {
-			mySavedPorts.erase((it));
+		if (it != std::end(mySavedPorts))
+		{
+			if (dtn > ddt) {
+				mySavedPorts.erase((it));
+			}
 		}
 	}
 	
