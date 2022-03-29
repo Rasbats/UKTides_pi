@@ -1056,10 +1056,19 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 	/* ensure the directory exists */
 	wxFileName fn;
 
+#if defined(__APPLE__)	
+
+	tidal_events_path = GetPluginDataDir("UKTides_pi");
+	wxString s = wxFileName::GetPathSeparator();
+
+    tidal_events_path += s + "data" + s + "tides";
+
+#endif
+
 	if (!wxDirExists(tidal_events_path)) {
 		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	}
-  
+
 	wxString filename = tidal_events_path + "/tidalevents.xml";	
 
 	if (myPorts.size() == 0) {		
