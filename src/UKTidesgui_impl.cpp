@@ -1056,15 +1056,6 @@ void Dlg::SaveTidalEventsToXml(list<myPort>myPorts)
 	/* ensure the directory exists */
 	wxFileName fn;
 
-#ifdef __WXOSX__	
-
-	tidal_events_path = GetPluginDataDir("UKTides_pi");
-	wxString s = wxFileName::GetPathSeparator();
-
-    tidal_events_path += s + "data" + s + "tides";
-
-#endif
-
 	if (!wxDirExists(tidal_events_path)) {
 		fn.Mkdir(tidal_events_path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	}
@@ -1130,15 +1121,6 @@ list<myPort>Dlg::LoadTidalEventsFromXml()
 	wxString tidal_events_path;
 
 	tidal_events_path = StandardPath();
-
-#ifdef __WXOSX__	
-
-	tidal_events_path = GetPluginDataDir("UKTides_pi");
-	wxString s = wxFileName::GetPathSeparator();
-
-    tidal_events_path += s + "data" + s + "tides";
-
-#endif
 
     wxString filename = tidal_events_path + "/tidalevents.xml";
 
