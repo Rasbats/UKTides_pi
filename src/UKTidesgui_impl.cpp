@@ -1235,20 +1235,37 @@ void Dlg::RemoveOldDownloads( ) {
 	DaySpan = wxTimeSpan::Days(7);
 
 	dtn = wxDateTime::Now().ToUTC();
+	
+	if (mySavedPorts.size() == 1) {	
 
-	for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
-		sddt = (*it).DownloadDate;
+		myPort thisPort = mySavedPorts.front();
+
+		sddt = thisPort.DownloadDate;
 		ddt.ParseDateTime(sddt);
 		ddt.Add(DaySpan);
 		ddt.ToUTC();
 
 		if (dtn > ddt) {
+			mySavedPorts.clear();			
+		}
+
+	}
+	else {
+
+		for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
+			sddt = (*it).DownloadDate;
+			ddt.ParseDateTime(sddt);
+			ddt.Add(DaySpan);
+			ddt.ToUTC();
+
+			if (dtn > ddt) {
 				mySavedPorts.erase(it);
 			}
-		else {
+			else {
 				it++;
 			}
-		
+
+		}
 	}
 	
 	SaveTidalEventsToXml(mySavedPorts);
