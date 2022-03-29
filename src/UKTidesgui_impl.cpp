@@ -1241,14 +1241,8 @@ void Dlg::RemoveOldDownloads( ) {
 			ddt.ToUTC();
 
 			if (dtn > ddt) {				
-				mySavedPorts.erase(it);
+				mySavedPorts.erase(it++);
 			}
-			else {
-				if (it != mySavedPorts.end()) {
-					it++;
-				}
-			}
-
 		}
 	}
 	
