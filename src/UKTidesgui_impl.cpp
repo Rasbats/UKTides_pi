@@ -802,7 +802,7 @@ void Dlg::OnShow(void)
 void Dlg::OnShowSavedPortTides(wxString thisPortId) {
 
 	if (mySavedPorts.empty()) {
-		wxMessageBox(_("No tidal data found. Please download the locations \n and use right click to select the UK tidal station"));
+		wxMessageBox(_("Please download the locations. \nUse right click to select the UK tidal station"));
 		return;
 	}
 
