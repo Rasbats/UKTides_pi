@@ -1243,6 +1243,9 @@ void Dlg::RemoveOldDownloads( ) {
 			if (dtn > ddt) {				
 				it = mySavedPorts.erase(it);
 			}
+			else {
+				it++;
+			}
 		}
 	}
 	
