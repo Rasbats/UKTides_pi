@@ -1215,6 +1215,7 @@ void Dlg::RemoveOldDownloads( ) {
 	wxString sdt, sddt;
 	wxTimeSpan DaySpan;
 	DaySpan = wxTimeSpan::Days(7);
+	bool tooOld;
 
 	dtn = wxDateTime::Now().ToUTC();
 	
@@ -1235,12 +1236,14 @@ void Dlg::RemoveOldDownloads( ) {
 	else {
 
 		for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
+			tooOld = false;
 			sddt = (*it).DownloadDate;
 			ddt.ParseDateTime(sddt);
 			ddt.Add(DaySpan);
 			ddt.ToUTC();
+			if (dtn > ddt) tooOld = true;
 
-			if (dtn > ddt) {				
+			if (tooOld) {				
 				it = mySavedPorts.erase(it);
 			}
 			else {
