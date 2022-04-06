@@ -886,9 +886,7 @@ void Dlg::getPort(double m_lat, double m_lon) {
 		wxMessageBox(_("Please try again"));
 		return;
 	}
-	
-	bool foundPort = false;
-	
+		
 	if (mySavedPorts.size() != 0) {
 		wxString portName, portId;
 		
@@ -904,20 +902,16 @@ void Dlg::getPort(double m_lat, double m_lon) {
 				dialog_return_value = mdlg->ShowModal();
 				switch(dialog_return_value){
 					case wxID_OK :
+					 getHWLW(m_portId.ToStdString());
 					 b_HideButtons = true;
 					 OnShow();
 					 break;	
 					case wxID_CANCEL :						
 					  break;
 				};
-				foundPort = true;
 			}
 		}
-		if (foundPort)return;		
 	}
-	
-	getHWLW(m_portId.ToStdString());
-	
 }
 
 wxString Dlg::getPortId(double m_lat, double m_lon) {
