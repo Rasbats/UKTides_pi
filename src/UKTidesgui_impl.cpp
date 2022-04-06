@@ -907,12 +907,12 @@ void Dlg::getPort(double m_lat, double m_lon) {
 						OnShow();
 						return;
 					case wxID_CANCEL :						
-						break;
+						return;
 				};
 			}			
 		}
-		getHWLW(m_portId.ToStdString());
-	} 	
+	} 			
+	getHWLW(m_portId.ToStdString());
 }
 
 wxString Dlg::getPortId(double m_lat, double m_lon) {
