@@ -905,15 +905,14 @@ void Dlg::getPort(double m_lat, double m_lon) {
 						getHWLW(m_portId.ToStdString());
 						b_HideButtons = true;
 						OnShow();
-					 break;	
+						return;
 					case wxID_CANCEL :						
-					  break;
+						break;
 				};
-			}
+			}			
 		}
-	}
-	
-	
+		getHWLW(m_portId.ToStdString());
+	} 	
 }
 
 wxString Dlg::getPortId(double m_lat, double m_lon) {
