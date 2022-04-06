@@ -1,6 +1,6 @@
 # UKTides\_pi README
 
-A plugin for OpenCPN. Almost a simulator or is it a game?
+A plugin for OpenCPN which downloads tidal heights for HW/LW from the UKHO. 
 
 Icons made by Freepik(http://www.freepik.com) from Flaticon(https://www.flaticon.com/) and is licensed by Creative Commons BY 3.0 (http://creativecommons.org/licenses/by/3.0/)
 
