@@ -902,9 +902,9 @@ void Dlg::getPort(double m_lat, double m_lon) {
 				dialog_return_value = mdlg->ShowModal();
 				switch(dialog_return_value){
 					case wxID_OK :
-					 getHWLW(m_portId.ToStdString());
-					 b_HideButtons = true;
-					 OnShow();
+						getHWLW(m_portId.ToStdString());
+						b_HideButtons = true;
+						OnShow();
 					 break;	
 					case wxID_CANCEL :						
 					  break;
@@ -912,6 +912,8 @@ void Dlg::getPort(double m_lat, double m_lon) {
 			}
 		}
 	}
+	
+	
 }
 
 wxString Dlg::getPortId(double m_lat, double m_lon) {
@@ -1260,12 +1262,11 @@ void Dlg::RemoveSavedPort(wxString myStation) {
 
 	if (mySavedPorts.size() == 1) {
 		mySavedPorts.clear();
-		SaveTidalEventsToXml(mySavedPorts);
 	}
 	else {
 		for (std::list<myPort>::iterator it = mySavedPorts.begin(); it != mySavedPorts.end();) {
 			if ((*it).Name == myStation) {				
-				mySavedPorts.erase(it);				
+				mySavedPorts.erase(it);
 				break;
 			}
 			else {
