@@ -52,7 +52,6 @@ cmake \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX= \
   -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 \
-  -DCMAKE_CXX_FLAGS=-stdlib=libstdc++ \
   -DOCPN_TARGET_TUPLE="darwin-wx32;10;x86_64" \
   ..
 
