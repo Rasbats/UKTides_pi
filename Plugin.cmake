@@ -34,7 +34,7 @@ option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 # -------  Plugin setup --------
 #
 set(PKG_NAME UKTides_pi)
-set(PKG_VERSION  1.4.0)
+set(PKG_VERSION  2.0.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME UKTides)    # Dialogs, installer artifacts, ...
@@ -50,8 +50,6 @@ set(PKG_HOMEPAGE https://github.com/Rasbats/uktides_pi)
 set(PKG_INFO_URL https://opencpn.org/OpenCPN/plugins/uktides.html)
 
 set(SRC
-    src/bbox.cpp
-    src/bbox.h		
     src/UKTides_pi.h
     src/UKTides_pi.cpp
     src/icons.h

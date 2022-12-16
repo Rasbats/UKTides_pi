@@ -59,7 +59,6 @@
 #endif
 
 class PlugIn_ViewPort;
-class wxBoundingBox;
 class piDC;
 
 using namespace std;
