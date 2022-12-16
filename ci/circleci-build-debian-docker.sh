@@ -65,9 +65,9 @@ function install_wx32() {
       /usr/lib/*-linux-gnu/wx/config/gtk3-unicode-3.2
 
   # See wxWidgets#22790. FIXME (leamas) To be removed after wxw 3.2.3
-  #cd /usr/include/wx-3.2/wx/
-  #patch -p1 < /ci-source/build-deps/0001-matrix.h-Patch-attributes-handling-wxwidgets-22790.patch
-  #popd
+  cd /usr/include/wx-3.2/wx/
+  patch -p1 < /ci-source/build-deps/0001-matrix.h-Patch-attributes-handling-wxwidgets-22790.patch
+  popd
 }
 
 set -x

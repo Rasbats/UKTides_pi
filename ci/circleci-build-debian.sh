@@ -53,10 +53,10 @@ function install_wx32() {
   sudo sed -i '/^user_mask_fits/s|{.*}|{ /bin/true; }|' \
       /usr/lib/$(uname -m)-linux-gnu/wx/config/gtk3-unicode-3.2
   # See wxWidgets#22790. To be removed after wxw 3.2.3
-  #cd /usr/include/wx-3.2/wx/
-  #sudo patch -p1 \
-  #  < $here/../build-deps/0001-matrix.h-Patch-attributes-handling-wxwidgets-22790.patch
-  #popd
+  cd /usr/include/wx-3.2/wx/
+  sudo patch -p1 \
+    < $here/../build-deps/0001-matrix.h-Patch-attributes-handling-wxwidgets-22790.patch
+  popd
 }
 
 set -xe
