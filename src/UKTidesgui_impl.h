@@ -44,7 +44,6 @@
 #include "json/writer.h"
 
 #include "ocpn_plugin.h"
-#include "pidc.h"
 
 #include "TexFont.h"
 
