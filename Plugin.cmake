@@ -94,9 +94,4 @@ macro(add_plugin_libraries)
 
   add_subdirectory("libs/jsoncpp")
   target_link_libraries(${PACKAGE_NAME} ocpn::jsoncpp)
-
-  add_subdirectory("libs/opencpn-glu")
-  target_link_libraries(${PACKAGE_NAME} ocpn::opencpn-glu)
-
-  
 endmacro ()
