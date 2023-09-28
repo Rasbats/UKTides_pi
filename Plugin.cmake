@@ -34,7 +34,7 @@ option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 # -------  Plugin setup --------
 #
 set(PKG_NAME UKTides_pi)
-set(PKG_VERSION  2.4.0)
+set(PKG_VERSION  2.5.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME UKTides)    # Dialogs, installer artifacts, ...
