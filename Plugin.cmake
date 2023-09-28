@@ -34,7 +34,7 @@ option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 # -------  Plugin setup --------
 #
 set(PKG_NAME UKTides_pi)
-set(PKG_VERSION  2.0.0)
+set(PKG_VERSION  2.4.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME UKTides)    # Dialogs, installer artifacts, ...
@@ -58,15 +58,15 @@ set(SRC
     src/UKTidesgui.cpp
     src/UKTidesgui_impl.cpp
     src/UKTidesgui_impl.h
-	src/NavFunc.cpp
-	src/NavFunc.h
-	src/tidetable.cpp
-	src/tidetable.h
-	src/gl_private.h
-	src/pidc.cpp
-	src/pidc.h
-	src/GL/gl.h
-	src/GL/glext.h	
+    src/NavFunc.cpp
+    src/NavFunc.h
+    src/tidetable.cpp
+    src/tidetable.h
+    src/gl_private.h
+    src/pidc.cpp
+    src/pidc.h
+    src/GL/gl.h
+    src/GL/glext.h
 )
 
 set(PKG_API_LIB api-17)  #  A directory in libs/ e. g., api-17 or api-16
@@ -83,7 +83,7 @@ macro(late_init)
   if (QT_ANDROID)
     add_definitions(-DUSE_ANDROID_GLES2)
   endif ()
-  
+
 endmacro ()
 macro(add_plugin_libraries)
   # Add libraries required by this plugin

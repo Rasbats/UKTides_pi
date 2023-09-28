@@ -2,208 +2,193 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-05 21:09+0100\n"
-"PO-Revision-Date: 2019-07-06 17:08\n"
-"Last-Translator: Pavel Kalian (nohal)\n"
+"POT-Creation-Date: 2023-09-27 11:25+0100\n"
+"PO-Revision-Date: 2023-09-28 10:51\n"
+"Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Language: fi_FI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: crowdin.com\n"
 "X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Project-ID: 49843\n"
 "X-Crowdin-Language: fi\n"
 "X-Crowdin-File: /plugins/UKTides_pi/po/UKTides_pi.pot\n"
-
-#: src/UKTides_pi.cpp:84
+"X-Crowdin-File-ID: 302\n"
+#
+msgid "      (Times are UTC)  "
+msgstr "      (Ajat on UTC)  "
+#
 msgid "    UKTides panel icon has NOT been loaded"
-msgstr ""
-
-#: src/UKTides_pi.cpp:118 src/UKTides_pi.cpp:121 src/UKTides_pi.cpp:194
-#: src/UKTides_pi.cpp:200 src/UKTidesgui_impl.cpp:738
-msgid "UKTides"
-msgstr ""
-
-#: src/UKTides_pi.cpp:128
-msgid "Select UK Tidal Station"
-msgstr ""
-
-#: src/UKTides_pi.cpp:205
-msgid "Downloads UKHO Tidal Data for UK ports"
-msgstr ""
-
-#: src/UKTidesgui.cpp:21
-msgid "Download"
-msgstr ""
-
-#: src/UKTidesgui.cpp:25
-msgid "Saved"
-msgstr ""
-
-#: src/UKTidesgui.cpp:28
-msgid "Locations"
-msgstr ""
-
-#: src/UKTidesgui.cpp:31
-msgid "Guide"
-msgstr ""
-
-#: src/UKTidesgui.cpp:34
-msgid "Help"
-msgstr ""
-
-#: src/UKTidesgui.cpp:42
-msgid "Important"
-msgstr ""
-
-#: src/UKTidesgui.cpp:44
-msgid "All times UTC"
-msgstr ""
-
-#: src/UKTidesgui.cpp:54
-msgid "Port Locations"
-msgstr ""
-
-#: src/UKTidesgui.cpp:56
+msgstr "    UKTides panelin ikonia ei ole ladattu"
+#
+msgid " (Height in metres)"
+msgstr " (Korkeus metrejä)"
+#
 msgid " Download  "
-msgstr ""
-
-#: src/UKTidesgui.cpp:59
-msgid "Status:"
-msgstr ""
-
-#: src/UKTidesgui.cpp:69
-msgid "Days ahead: "
-msgstr ""
-
-#: src/UKTidesgui.cpp:73
+msgstr " Lataa  "
+#
 msgid "1"
-msgstr ""
-
-#: src/UKTidesgui.cpp:73
+msgstr "1"
+#
 msgid "2"
-msgstr ""
-
-#: src/UKTidesgui.cpp:73
+msgstr "2"
+#
 msgid "3"
-msgstr ""
-
-#: src/UKTidesgui.cpp:73
+msgstr "3"
+#
 msgid "4"
-msgstr ""
-
-#: src/UKTidesgui.cpp:73
+msgstr "4"
+#
 msgid "5"
-msgstr ""
-
-#: src/UKTidesgui.cpp:73
+msgstr "5"
+#
 msgid "6"
-msgstr ""
-
-#: src/UKTidesgui.cpp:73
+msgstr "6"
+#
 msgid "7"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:128
+msgstr "7"
+#
 msgid "Aborted"
+msgstr "Keskeytettiin"
+#
+msgid "All times UTC"
+msgstr "Ajat UTC"
+#
+msgid "Date/Time"
+msgstr "Päivämäärä/aika"
+#
+msgid "Days ahead: "
+msgstr "Päiviä eteenpäin: "
+#
+msgid "Delete"
 msgstr ""
-
-#: src/UKTidesgui_impl.cpp:133
-msgid "Download failed.\n\n"
+#
+msgid "Delete ALL"
+msgstr ""
+#
+msgid ""
+"Download failed.\n"
+"\n"
 "Are you connected to the Internet?"
 msgstr ""
-
-#: src/UKTidesgui_impl.cpp:135
+"Lataus epäonnistui.\n"
+"\n"
+"Toimiiko netti?"
+#
+msgid "Downloads UKHO Tidal Data for UK ports"
+msgstr "Lataa UKHO vuorovesi datan UK satamille"
+#
 msgid "Failed"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:140
-msgid "Success"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:152
-msgid "No tidal stations found"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:161
-msgid "No features found in message"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:173
-msgid "No properties found in message"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:232
-msgid "Select the Location"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:425
-msgid "Tides"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:426 src/UKTidesgui_impl.cpp:486
-msgid "      (Times are UTC)  "
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:426 src/UKTidesgui_impl.cpp:486
-msgid " (Height in metres)"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:435
-msgid "No tidal data found. Please use right click to select the UK tidal station"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:469
-msgid "No tidal data found. Please download the locations \n"
-" and use right click to select the UK tidal station"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:473
-msgid "Locations Saved"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:560
-msgid "No active tidal stations found. Please download the locations"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:584 src/UKTidesgui_impl.cpp:620
-msgid "Port not found"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:598
-msgid "No tidal stations found. Please download locations when online"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:738
+msgstr "Hylätty"
+#
 msgid "Failed to save xml file: "
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:757
-msgid "Tidal Events"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:760
-msgid "No UK tide locations available"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:765
-msgid "Invalid xml file"
-msgstr ""
-
-#: src/UKTidesgui_impl.cpp:860 src/tidetable.cpp:139
-msgid "OK"
-msgstr ""
-
-#: src/tidetable.cpp:151
-msgid "Date/Time"
-msgstr ""
-
-#: src/tidetable.cpp:152
+msgstr "Tiedostoa ei voi tallentaa xml-muodossa: "
+#
 msgid "HW/LW"
-msgstr ""
-
-#: src/tidetable.cpp:153
+msgstr "HW/LW"
+#
 msgid "Height"
+msgstr "Korkeus"
+#
+msgid "Important"
+msgstr "Tärkeää"
+#
+msgid ""
+"In the saved list \n"
+"\n"
+"OK: Shows the data for this station.\n"
+"\n"
+"     Updates the data if online"
 msgstr ""
-
+#
+msgid "Invalid xml file"
+msgstr "Kelvoton xml-tiedosto"
+#
+msgid "Locations Saved"
+msgstr "Sijainnit talletettu"
+#
+msgid "No UK tide locations available"
+msgstr "UK vuorovesi sijainteja ei ole saatavilla"
+#
+msgid "No active tidal stations found. Please download the locations"
+msgstr "Aktiivisia vuorovesiasemia ei löytynyt. Lataa sijainnit"
+#
+msgid "No features found in message"
+msgstr "Mitään ominaisuuksia ei löytynyt viestistä"
+#
+msgid "No locations are available, please download and select a tidal station"
+msgstr ""
+#
+msgid "No properties found in message"
+msgstr "Mitään ominaisuuksia ei löytynyt viestistä"
+#
+msgid "No saved tidal stations. Please load"
+msgstr ""
+#
+msgid ""
+"No tidal data found. Please use right click to select the UK tidal station"
+msgstr ""
+"Ei löytynyt vuorovesi dataa. Valitse oikean klikkauksella UK vuorovesi asema"
+#
+msgid "No tidal stations found"
+msgstr "Vuorovesi asemia ei löytynyt"
+#
+msgid "No tidal stations found. Please download locations when online"
+msgstr "Vuorovesi asemia ei löytynyt. Lataasijainnit, kun olet netissä"
+#
+msgid "OK"
+msgstr "OK"
+#
+msgid ""
+"Please download the locations. \n"
+"Use right click to select the UK tidal station"
+msgstr ""
+#
+msgid "Please try again"
+msgstr ""
+#
+msgid "Port not found"
+msgstr "Satamaa ei löytynyt"
+#
+msgid "Remove ALL Icons"
+msgstr ""
+#
+msgid ""
+"Remove Icons \n"
+" OTHER THAN saved"
+msgstr ""
+#
+msgid "Saved Port"
+msgstr ""
+#
+msgid "Select UK Tidal Station"
+msgstr "Valitse UK vuorovesi asema"
+#
+msgid "Select the Location"
+msgstr "Valitse sijainti"
+#
+msgid "Show Saved"
+msgstr ""
+#
+msgid "Status:   Standby"
+msgstr ""
+#
+msgid "Success"
+msgstr "Onnistui"
+#
+msgid "Tidal Events"
+msgstr "Vuorovesi tapahtumat"
+#
+msgid "Tidal Stations"
+msgstr ""
+#
+msgid "Tides"
+msgstr "Vuorovedet"
+#
+msgid "UKTides"
+msgstr "UKVuorovesi"
+#
+msgid "UKTides:: station bitmap has NOT been loaded"
+msgstr ""
