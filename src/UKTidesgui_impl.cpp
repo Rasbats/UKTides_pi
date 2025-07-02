@@ -694,8 +694,8 @@ void Dlg::getHWLW(string id)
 		for (int j = 0; j < i; j++) {
 
 			string type = root2[j]["EventType"].asString();
-			if (type == "HighWater") type = "HW";
-			else if (type == "LowWater") type = "LW";
+			if (type == "HighWater") type = _("HW");
+			else if (type == "LowWater") type = _("LW");
 			wxString mytype(type.c_str(), wxConvUTF8);
 			outTidalEvent.EventType = mytype;
 

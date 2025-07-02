@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: UKTides_pi 2.0.0\n"
+"Project-Id-Version: UKTides_pi 2.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-27 11:25+0100\n"
+"POT-Creation-Date: 2023-09-28 19:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,6 +141,14 @@ msgstr ""
 
 #: src/UKTidesgui_impl.cpp:536
 msgid "Select the Location"
+msgstr ""
+
+#: src/UKTidesgui_impl.cpp:697
+msgid "HW"
+msgstr ""
+
+#: src/UKTidesgui_impl.cpp:698
+msgid "LW"
 msgstr ""
 
 #: src/UKTidesgui_impl.cpp:755
