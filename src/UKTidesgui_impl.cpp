@@ -39,8 +39,6 @@
 #include <wx/graphics.h>
 #include "qtstylesheet.h"
 
-#include "pidc.h"
-
 #ifdef __OCPN__ANDROID__
 wxWindow *g_Window;
 #endif
@@ -61,7 +59,7 @@ wxWindow *g_Window;
 
 
 class Position;
-class myPort;
+struct myPort;
 
 static int texture_format;
 static bool glQueried = false;
@@ -364,9 +362,9 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 void Dlg::DrawLine(double x1, double y1, double x2, double y2,
 	const wxColour &color, double width)
 {
-	m_dc->ConfigurePen();
+	//m_dc->ConfigurePen();
 	m_dc->SetPen(wxPen(color, width));
-	m_dc->ConfigureBrush();
+	//m_dc->ConfigureBrush();
 	m_dc->SetBrush(*wxTRANSPARENT_BRUSH);
 	m_dc->DrawLine(x1, y1, x2, y2, false);
 
