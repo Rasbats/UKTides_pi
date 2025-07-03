@@ -31,33 +31,34 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class DlgDef
 ///////////////////////////////////////////////////////////////////////////////
-class DlgDef : public wxDialog
-{
-	private:
+class DlgDef : public wxDialog {
+private:
+protected:
+  wxStaticText* m_staticText9;
+  wxChoice* m_choice3;
+  wxStaticLine* m_staticline2;
 
-	protected:
-		wxStaticText* m_staticText9;
-		wxChoice* m_choice3;
-		wxStaticLine* m_staticline2;
+  // Virtual event handlers, override them in your derived class
+  virtual void OnDLeftClick(wxMouseEvent& event) { event.Skip(); }
 
-		// Virtual event handlers, override them in your derived class
-		virtual void OnDownload( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnGetSavedTides( wxCommandEvent& event ) { event.Skip(); }
-		virtual void DoRemovePortIcons( wxCommandEvent& event ) { event.Skip(); }
-		virtual void DoRemoveAllPortIcons( wxCommandEvent& event ) { event.Skip(); }
+  virtual void OnDownload(wxCommandEvent& event) { event.Skip(); }
+  virtual void OnGetSavedTides(wxCommandEvent& event) { event.Skip(); }
+  virtual void DoRemovePortIcons(wxCommandEvent& event) { event.Skip(); }
+  virtual void DoRemoveAllPortIcons(wxCommandEvent& event) { event.Skip(); }
 
+public:
+  wxStaticText* m_stTimeZone;
+  wxButton* m_buttonDownload;
+  wxStaticText* m_stUKDownloadInfo;
+  wxButton* m_buttonSaved;
+  wxButton* m_buttonSaved1;
+  wxButton* m_buttonSaved11;
 
-	public:
-		wxStaticText* m_stTimeZone;
-		wxButton* m_buttonDownload;
-		wxStaticText* m_stUKDownloadInfo;
-		wxButton* m_buttonSaved;
-		wxButton* m_buttonSaved1;
-		wxButton* m_buttonSaved11;
+  DlgDef(wxWindow* parent, wxWindowID id = wxID_ANY,
+         const wxString& title = _("UKTides"),
+         const wxPoint& pos = wxDefaultPosition,
+         const wxSize& size = wxDefaultSize,
+         long style = wxDEFAULT_DIALOG_STYLE);
 
-		DlgDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("UKTides"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
-
-		~DlgDef();
-
+  ~DlgDef();
 };
-
