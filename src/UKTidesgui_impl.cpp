@@ -80,10 +80,9 @@ static GLboolean QueryExtension( const char *extName )
     return GL_FALSE;
 }
 
-Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
-	: DlgDef(parent),
-	m_UKTides_pi(_UKTides_pi)
-{
+Dlg::Dlg(wxWindow* parent, wxWindowID id, const wxString& title,
+         const wxPoint& pos, const wxSize& size, long style)
+    : DlgDef(parent, id, title, pos, size, style) {
 
 	this->Fit();
     	dbg=false; //for debug output set to true
@@ -108,9 +107,7 @@ Dlg::Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent)
 	b_clearSavedIcons = true;
 }
 
-Dlg::~Dlg()
-{
-}
+
 
 #ifdef __ANDROID__
 wxPoint g_startPos;
@@ -212,6 +209,7 @@ void Dlg::OnMouseEvent(wxMouseEvent& event) {
 }
 
 #endif  // End of Android functions for move/resize
+
 
 void Dlg::OnInformation(wxCommandEvent& event)
 {
@@ -417,17 +415,6 @@ void Dlg::DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
 			}
 		}
 	}	
-}
-
-void Dlg::DrawLine(double x1, double y1, double x2, double y2,
-	const wxColour &color, double width)
-{
-	//m_dc->ConfigurePen();
-	m_dc->SetPen(wxPen(color, width));
-	//m_dc->ConfigureBrush();
-	m_dc->SetBrush(*wxTRANSPARENT_BRUSH);
-	m_dc->DrawLine(x1, y1, x2, y2, false);
-
 }
 
 void Dlg::Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype){

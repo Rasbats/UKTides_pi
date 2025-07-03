@@ -81,8 +81,10 @@ class TideTable;
 
 class Dlg : public DlgDef {
 public:
-  Dlg(UKTides_pi &_UKTides_pi, wxWindow *parent);
-  ~Dlg();
+  Dlg(wxWindow *parent, wxWindowID id = wxID_ANY,
+      const wxString &title = _("UK Tides"),
+      const wxPoint &pos = wxDefaultPosition,
+      const wxSize &size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE);
 
   void OnDownload(wxCommandEvent &event);
   void OnGetSavedTides(wxCommandEvent &event);
@@ -101,8 +103,6 @@ public:
   void getPort(double m_lat, double m_lon);
   wxString m_default_configuration_path;
   void AutoSizeHeader(wxListCtrl *const list_ctrl);
-
-  UKTides_pi &m_UKTides_pi;
 
 #ifdef __ANDROID__
   void OnMouseEvent(wxMouseEvent &event);
@@ -130,15 +130,6 @@ public:
   void DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
                                 bool bforce_redraw_icons,
                                 bool bdraw_mono_for_mask);
-  void DrawOLBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask);
-  void DrawGLLabels(Dlg *pof, wxDC *dc, PlugIn_ViewPort *vp,
-                    wxImage &imageLabel, double myLat, double myLon,
-                    int offset);
-  wxImage &DrawGLTextString(wxString myText);
-
-  void DrawLine(double x1, double y1, double x2, double y2,
-                const wxColour &color, double width);
-
   wxBitmap m_stationBitmap;
 
   TideTable *tidetable;

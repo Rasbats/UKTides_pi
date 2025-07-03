@@ -241,10 +241,10 @@ void UKTides_pi::SetColorScheme(PI_ColorScheme cs)
 void UKTides_pi::OnToolbarToolCallback(int id)
 {
     
-	if(NULL == m_pDialog)
+	if(!m_pDialog)
       {
            
-		    m_pDialog = new Dlg(*this, m_parent_window);
+		    m_pDialog = new Dlg(m_parent_window);
             m_pDialog->plugin = this;
             m_pDialog->Move(wxPoint(m_route_dialog_x, m_route_dialog_y));
 
