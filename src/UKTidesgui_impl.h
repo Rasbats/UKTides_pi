@@ -48,186 +48,177 @@
 
 #include "TexFont.h"
 
-
 #include <map>
 #include <list>
 #include <vector>
 
-#ifdef __OCPN__ANDROID__
-#include <qopengl.h>
-#include "gl_private.h"
-#endif
+#define ID_SOMETHING 2001
+#define ID_SOMETHING_ELSE 2002
 
 class PlugIn_ViewPort;
 class piDC;
 
 using namespace std;
 
-struct TidalEvent
-{
-	wxString EventType;
-	wxString DateTime;
-	wxString Height;
+struct TidalEvent {
+  wxString EventType;
+  wxString DateTime;
+  wxString Height;
 };
 
-struct myPort
-{
-	wxString Name;
-	wxString DownloadDate;
-	wxString Id;
-	double coordLat;
-	double coordLon;
-	list<TidalEvent>tidalevents;
+struct myPort {
+  wxString Name;
+  wxString DownloadDate;
+  wxString Id;
+  double coordLat;
+  double coordLon;
+  list<TidalEvent> tidalevents;
 };
 
 class UKTides_pi;
 class Position;
 class TideTable;
 
-class Dlg : public DlgDef
-{
+class Dlg : public DlgDef {
 public:
-	Dlg(UKTides_pi &_UKTides_pi, wxWindow* parent);
-	~Dlg();
+  Dlg(UKTides_pi &_UKTides_pi, wxWindow *parent);
+  ~Dlg();
 
-#ifdef __OCPN__ANDROID__
-    void OnMouseEvent( wxMouseEvent& event );
+  void OnDownload(wxCommandEvent &event);
+  void OnGetSavedTides(wxCommandEvent &event);
+  void DoRemovePortIcons(wxCommandEvent &event);
+  void DoRemoveAllPortIcons(wxCommandEvent &event);
+
+  void OnInformation(wxCommandEvent &event);
+  void Addpoint(TiXmlElement *Route, wxString ptlat, wxString ptlon,
+                wxString ptname, wxString ptsym, wxString pttype);
+
+  UKTides_pi *plugin;
+
+  wxString rte_start;
+  wxString rte_end;
+
+  void getPort(double m_lat, double m_lon);
+  wxString m_default_configuration_path;
+  void AutoSizeHeader(wxListCtrl *const list_ctrl);
+
+  UKTides_pi &m_UKTides_pi;
+
+#ifdef __ANDROID__
+  void OnMouseEvent(wxMouseEvent &event);
+  wxPoint m_resizeStartPoint;
+  wxSize m_resizeStartSize;
+  bool m_binResize;
+  bool m_binResize2;
+
+  void OnPopupClick(wxCommandEvent &evt);
+  void OnDLeftClick(wxMouseEvent &event);
+
 #endif
 
-        void OnDownload( wxCommandEvent& event );	
-		void OnGetSavedTides(wxCommandEvent& event);
-		void DoRemovePortIcons(wxCommandEvent& event);
-		void DoRemoveAllPortIcons(wxCommandEvent& event);
+  wxString StandardPath();
 
-		void OnInformation(wxCommandEvent& event);
-        void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype);	
-			
-		UKTides_pi *plugin; 
+  list<myPort> myports;
+  list<myPort> mySavedPorts;
 
-		wxString rte_start;
-	    wxString rte_end;
-	
-		void getPort(double m_lat, double m_lon);
-		wxString m_default_configuration_path;
-		void AutoSizeHeader(wxListCtrl *const list_ctrl);
+  myPort mySavedPort;
 
-		UKTides_pi &m_UKTides_pi;
-		wxString StandardPath();
+  void SetViewPort(PlugIn_ViewPort *vp);
+  bool RenderOverlay(piDC &dc, PlugIn_ViewPort &vp);
+  void DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
+                           bool bforce_redraw_icons, bool bdraw_mono_for_mask);
+  void DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
+                                bool bforce_redraw_icons,
+                                bool bdraw_mono_for_mask);
+  void DrawOLBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask);
+  void DrawGLLabels(Dlg *pof, wxDC *dc, PlugIn_ViewPort *vp,
+                    wxImage &imageLabel, double myLat, double myLon,
+                    int offset);
+  wxImage &DrawGLTextString(wxString myText);
 
-		list<myPort>myports;
-		list<myPort>mySavedPorts;
+  void DrawLine(double x1, double y1, double x2, double y2,
+                const wxColour &color, double width);
 
-		myPort mySavedPort;
+  wxBitmap m_stationBitmap;
 
-		void SetViewPort(PlugIn_ViewPort *vp);
-		bool RenderOverlay(piDC &dc, PlugIn_ViewPort &vp);
-		void DrawAllStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList, bool bforce_redraw_icons, bool bdraw_mono_for_mask);
-		void DrawAllSavedStationIcons(PlugIn_ViewPort *BBox, bool bRebuildSelList,
-			bool bforce_redraw_icons, bool bdraw_mono_for_mask);
-		void DrawOLBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask);
-		void DrawGLLabels(Dlg *pof, wxDC *dc, PlugIn_ViewPort *vp,
-			wxImage &imageLabel, double myLat, double myLon, int offset);
-		wxImage &DrawGLTextString(wxString myText);
+  TideTable *tidetable;
+  bool b_usingSavedPorts;
+  bool b_clearSavedIcons;
+  bool b_clearAllIcons;
+  void OnShow(void);
+  void OnTest(wxString thePort);
+  void RemoveSavedPort(wxString myStation);
+  void RemoveAllSavedPorts();
 
-		void DrawLine(double x1, double y1, double x2, double y2,
-			const wxColour &color, double width);
+  wxMessageDialog *mdlg;
 
-		wxBitmap m_stationBitmap;
+  PlugIn_ViewPort *vp;
+  PlugIn_ViewPort *m_vp;
 
-
-		TideTable* tidetable;
-		bool b_usingSavedPorts;
-		bool b_clearSavedIcons;
-		bool b_clearAllIcons;
-		void OnShow(void);
-		void OnTest(wxString thePort);
-		void RemoveSavedPort(wxString myStation);
-		void RemoveAllSavedPorts();
-
-		wxMessageDialog* mdlg;
-		
-		PlugIn_ViewPort  *vp;
-		PlugIn_ViewPort  *m_vp;
-
-		piDC *m_dc;
-		bool b_HideButtons;
+  piDC *m_dc;
+  bool b_HideButtons;
 
 private:
-	
-	
-	wxString m_titlePortName;
-	
-	list<TidalEvent>myevents;
-	list<TidalEvent>mySavedEvents;
+  wxString m_titlePortName;
 
-	myPort SavePortTidalEvents(list<TidalEvent>myEvents, string portId);
-	void SaveTidalEventsToXml(list<myPort>myPorts);
+  list<TidalEvent> myevents;
+  list<TidalEvent> mySavedEvents;
 
-	list<myPort> LoadTidalEventsFromXml();
+  myPort SavePortTidalEvents(list<TidalEvent> myEvents, string portId);
+  void SaveTidalEventsToXml(list<myPort> myPorts);
 
-	double AttributeDouble(TiXmlElement *e, const char *name, double def);
-	wxString GetDateStringNow();
-	void RemoveOldDownloads();
-	
+  list<myPort> LoadTidalEventsFromXml();
 
-	void getHWLW(string id);
-	wxString getPortId(double m_lat, double m_lon);
-	wxString getSavedPortId(double m_lat, double m_lon);
-	wxString ProcessDate(wxString myLongDate);
-	
-	void OnShowSavedPortTides(wxString thisPortId);
-	void OnClose( wxCloseEvent& event );
+  double AttributeDouble(TiXmlElement *e, const char *name, double def);
+  wxString GetDateStringNow();
+  void RemoveOldDownloads();
 
-	
-    double lat1, lon1, lat2, lon2;
-    bool error_found;
-    bool dbg;
+  void getHWLW(string id);
+  wxString getPortId(double m_lat, double m_lon);
+  wxString getSavedPortId(double m_lat, double m_lon);
+  wxString ProcessDate(wxString myLongDate);
 
-	wxString     m_gpx_path;	
-	wxDateTime m_dtNow;
+  void OnShowSavedPortTides(wxString thisPortId);
+  void OnClose(wxCloseEvent &event);
 
-	wxFont *pTCFont;
-	wxColour m_text_color;
-	std::map < double, wxImage > m_labelCache;
-	std::map < wxString, wxImage > m_labelCacheText;
+  double lat1, lon1, lat2, lon2;
+  bool error_found;
+  bool dbg;
 
-	
-	
+  wxString m_gpx_path;
+  wxDateTime m_dtNow;
+
+  wxFont *pTCFont;
+  wxColour m_text_color;
+  std::map<double, wxImage> m_labelCache;
+  std::map<wxString, wxImage> m_labelCacheText;
 };
 
-
-class Position
-{
+class Position {
 public:
-
-    wxString lat, lon, wpt_num;
-    Position *prev, *next; /* doubly linked circular list of positions */
-    int routepoint;
-
+  wxString lat, lon, wpt_num;
+  Position *prev, *next; /* doubly linked circular list of positions */
+  int routepoint;
 };
 
-class GetTidalEventDialog : public wxDialog
-{
+class GetTidalEventDialog : public wxDialog {
 public:
+  GetTidalEventDialog(wxWindow *parent, wxWindowID id, const wxString &title,
+                      const wxPoint &pos = wxDefaultPosition,
+                      const wxSize &size = wxDefaultSize,
+                      long style = wxDEFAULT_DIALOG_STYLE);
 
-	GetTidalEventDialog(wxWindow * parent, wxWindowID id, const wxString & title,
-		const wxPoint & pos = wxDefaultPosition,
-		const wxSize & size = wxDefaultSize,
-		long style = wxDEFAULT_DIALOG_STYLE);
+  wxListView *dialogText;
+  wxString GetText();
 
-	wxListView * dialogText;
-	wxString GetText();
+  wxStaticBoxSizer *m_pListSizer;
+  wxScrolledWindow *itemDialog1;
+  wxStaticBox *itemStaticBoxSizer14Static;
 
-	wxStaticBoxSizer* m_pListSizer;
-	wxScrolledWindow *itemDialog1;
-	wxStaticBox* itemStaticBoxSizer14Static;
-
-	wxButton*     m_OKButton;
+  wxButton *m_OKButton;
 
 private:
-
-	void OnOk(wxCommandEvent & event);
-
+  void OnOk(wxCommandEvent &event);
 };
 
 #endif
