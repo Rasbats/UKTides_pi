@@ -79,6 +79,10 @@ macro(late_init)
     add_definitions(-DUSE_ANDROID_GLES2)
   endif ()
 
+  if (APPLE)
+    target_compile_definitions(${PACKAGE_NAME} PUBLIC OCPN_GHC_FILESYSTEM)
+  endif ()
+
 endmacro ()
 macro(add_plugin_libraries)
   # Add libraries required by this plugin
