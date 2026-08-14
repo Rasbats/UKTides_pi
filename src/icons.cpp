@@ -5,15 +5,8 @@
 #endif
 #include <wx/mstream.h>
 #include "icons.h"
-#include <wx/fileconf.h>
 
 wxBitmap *_img_uktides;
-
-#ifdef PLUGIN_USE_SVG
-#include "ocpn_plugin.h"
-wxString _svg_uktides;
-wxString _svg_uktides_toggled;
-#endif
 
 void initialize_images(void)
 {
@@ -22,19 +15,4 @@ void initialize_images(void)
 		_img_uktides = new wxBitmap(wxImage(sm));
 	}
 
-#ifdef PLUGIN_USE_SVG
-	wxFileName fn;
-	wxString tmp_path;
-
-	tmp_path = GetPluginDataDir("UKTides_pi");	
-	fn.SetPath(tmp_path);
-	fn.AppendDir(_T("data"));
-	
-	fn.SetFullName("UKTides_pi.svg");	
-	_svg_uktides = fn.GetFullPath();
-	fn.SetFullName("UKTides_pi_toggled.svg");
-	_svg_uktides_toggled = fn.GetFullPath();
-#endif
-
-	return;
 }

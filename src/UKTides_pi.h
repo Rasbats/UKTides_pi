@@ -40,7 +40,8 @@
 #include "ocpn_plugin.h" //Required for OCPN plugin functions
 #include "icons.h"
 #include "UKTidesgui_impl.h"
-
+#include "plug_utils.h"
+#include "std_filesystem.h"
 #include "pidc.h"
 
 #include "config.h"
@@ -101,6 +102,7 @@ public:
 	  double GetCursorLat(void) { return m_cursor_lat; }
 	  
 	  int m_position_menu_id;
+      wxBitmap m_panel_bitmap;
 
 private:
       

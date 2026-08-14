@@ -70,38 +70,28 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 
 UKTides_pi::UKTides_pi(void *ppimgr)
       :opencpn_plugin_118 (ppimgr)
-{
+
 		// Create the PlugIn icons
-	initialize_images();
-
-	wxFileName fn;
-
-	wxString path = GetPluginDataDir("UKTides_pi");
-	fn.SetPath(path);
-	fn.AppendDir("data");
-	fn.SetFullName("uktides_panel_icon.png");
-
-	path = fn.GetFullPath();
-    
-    wxInitAllImageHandlers();
-
-	wxLogDebug(wxString("Using icon path: ") + path);
-	if (!wxImage::CanRead(path)) {
-		wxLogDebug("Initiating image handlers.");
-		wxInitAllImageHandlers();
-	}
-
-	wxImage panelIcon(path);
-
-	if (panelIcon.IsOk())
-		m_panelBitmap = wxBitmap(panelIcon);
-	else
-		wxLogMessage(_("    UKTides panel icon has NOT been loaded"));
+{	
 
 
+          // Create the PlugIn icons
+          initialize_images();
+          auto icon_path = GetPluginIcon("uktides_panel_icon", PKG_NAME);
+          if (icon_path.type == IconPath::Type::Svg)
+            m_panel_bitmap = LoadSvgIcon(icon_path.path.c_str());
+          else if (icon_path.type == IconPath::Type::Png)
+            m_panel_bitmap = LoadPngIcon(icon_path.path.c_str());
+          else  // icon_path.type == NotFound
+            wxLogWarning("Cannot find icon for basename: %s",
+                         "shipdriver_panel_icon");
+          if (m_panel_bitmap.IsOk())
+            wxLogDebug("UKTidesPi::, bitmap OK");
+          else
+            wxLogDebug("UKTidesPi::, bitmap fail");
+          m_bShowUKTides = false;
+        }
 
-	m_bShowUKTides = false;
-}
 
 UKTides_pi::~UKTides_pi(void)
 {
@@ -127,18 +117,23 @@ int UKTides_pi::Init(void)
       //    And load the configuration items
       LoadConfig();
 
+	auto icon = GetPluginIcon("UKTides_pi", PKG_NAME);
+      auto toggled_icon = GetPluginIcon("UKTides_pi_toggled", PKG_NAME);
       //    This PlugIn needs a toolbar icon, so request its insertion
-	  if (m_bUKTidesShowIcon) {
-
-#ifdef PLUGIN_USE_SVG
-		  m_leftclick_tool_id = InsertPlugInToolSVG("UKTides", _svg_uktides, _svg_uktides, _svg_uktides_toggled,
-			  wxITEM_CHECK, _("UKTides"), "", NULL, UKTIDES_TOOL_POSITION, 0, this);
-#else
-		  m_leftclick_tool_id = InsertPlugInTool("", _img_uktides, _img_uktides, wxITEM_CHECK,
-			  _("UKTides"), "", NULL,
-			  UKTIDES_TOOL_POSITION, 0, this);
-#endif
-	  }
+      if (m_bShowUKTides) {
+        if (icon.type == IconPath::Type::Svg)
+          m_leftclick_tool_id = InsertPlugInToolSVG(
+              "UKTides", icon.path, icon.path, toggled_icon.path, wxITEM_CHECK,
+              "UKTides", "", nullptr, UKTIDES_TOOL_POSITION ,
+              0, this);
+        else if (icon.type == IconPath::Type::Png) {
+          auto bitmap = LoadPngIcon(icon.path.c_str());
+          m_leftclick_tool_id =
+              InsertPlugInTool("", &bitmap, &bitmap, wxITEM_CHECK, "UKTides",
+                               "", nullptr, UKTIDES_TOOL_POSITION , 0, this);
+        }
+      }
+  
 	wxMenu dummy_menu;
 	m_position_menu_id = AddCanvasContextMenuItem
 
