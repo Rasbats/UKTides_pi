@@ -140,7 +140,7 @@ int UKTides_pi::Init(void)
 	(new wxMenuItem(&dummy_menu, -1, _("Select UK Tidal Station")), this);
 	SetCanvasContextMenuItemViz(m_position_menu_id, false);
 
-     m_pDialog = NULL;	 
+     m_pDialog = nullptr;
 	
 	
 
@@ -241,62 +241,31 @@ void UKTides_pi::SetColorScheme(PI_ColorScheme cs)
 void UKTides_pi::OnToolbarToolCallback(int id)
 {
     
-	if(!m_pDialog)
-      {
-           
-		    m_pDialog = new Dlg(m_parent_window);
-            m_pDialog->plugin = this;
-            m_pDialog->Move(wxPoint(m_route_dialog_x, m_route_dialog_y));
+	if (!m_pDialog) {
+    m_pDialog = new Dlg(m_parent_window);
+    m_pDialog->plugin = this;
+    m_pDialog->Move(wxPoint(m_route_dialog_x, m_route_dialog_y));
 
-			wxFileName fn;
-			wxString path;
+    // Toggle
+    m_bShowUKTides = !m_bShowUKTides;
 
-			path = GetPluginDataDir("UKTides_pi");
-			fn.SetPath(path);
-			fn.AppendDir(_T("data"));
-			fn.SetFullName("station_icon.png");
+    //    Toggle dialog?
+    if (m_bShowUKTides) {
+      m_pDialog->Show();
+      m_pDialog->b_clearAllIcons = false;
+      m_pDialog->b_clearSavedIcons = false;
 
-			path = fn.GetFullPath();
+    } else {
+      m_pDialog->Hide();
+      m_pDialog->b_clearAllIcons = true;
+      m_pDialog->b_clearSavedIcons = true;
+    }
+    // Toggle is handled by the toolbar but we must keep plugin manager b_toggle
+    // updated to actual status to ensure correct status upon toolbar rebuild
+    SetToolbarItemState(m_leftclick_tool_id, m_bShowUKTides);
 
-			wxLogDebug(wxString("Using station icon path: ") + path);
-			if (!wxImage::CanRead(path)) {
-				wxLogDebug("Initiating image handlers.");
-				wxInitAllImageHandlers();
-			}
-			
-			wxImage stationIcon(path);
-
-			if (stationIcon.IsOk())
-				m_pDialog->m_stationBitmap = wxBitmap(stationIcon);
-			else
-				wxLogMessage(_("UKTides:: station bitmap has NOT been loaded"));	
-
-			m_pDialog->b_clearAllIcons = false;
-			m_pDialog->b_clearSavedIcons = false;
-						
-      }
-
-	  m_pDialog->Fit();
-	  //Toggle 
-	  m_bShowUKTides = !m_bShowUKTides;	  
-
-      //    Toggle dialog? 
-      if(m_bShowUKTides) {		  
-          m_pDialog->Show();
-		  m_pDialog->b_clearAllIcons = false;
-		  m_pDialog->b_clearSavedIcons = false;
-
-	  }
-	  else {		 
-		  m_pDialog->Hide();
-		  m_pDialog->b_clearAllIcons = true;
-		  m_pDialog->b_clearSavedIcons = true;
-	  }
-      // Toggle is handled by the toolbar but we must keep plugin manager b_toggle updated
-      // to actual status to ensure correct status upon toolbar rebuild
-      SetToolbarItemState( m_leftclick_tool_id, m_bShowUKTides );
-
-      RequestRefresh(m_parent_window); // refresh main window
+    RequestRefresh(m_parent_window);  // refresh main window
+  }
 }
 
 void UKTides_pi::OnUKTidesDialogClose()
