@@ -69,7 +69,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 //---------------------------------------------------------------------------------------------------------
 
 UKTides_pi::UKTides_pi(void *ppimgr)
-      :opencpn_plugin_120 (ppimgr)
+      :opencpn_plugin_118 (ppimgr)
 {
 		// Create the PlugIn icons
 	initialize_images();
