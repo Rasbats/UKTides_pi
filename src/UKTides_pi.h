@@ -37,11 +37,7 @@
 
 #include <wx/fileconf.h>
 
-#include "ocpn_plugin.h" //Required for OCPN plugin functions
-#include "icons.h"
 #include "UKTidesgui_impl.h"
-#include "plug_utils.h"
-#include "std_filesystem.h"
 #include "pidc.h"
 
 #include "config.h"
@@ -58,8 +54,8 @@ class Dlg;
 class UKTides_pi : public opencpn_plugin_118
 {
 public:
-      UKTides_pi(void *ppimgr);
-	   ~UKTides_pi(void);
+      explicit UKTides_pi(void *ppimgr);
+	   ~UKTides_pi() override;
 
 //    The required PlugIn Methods
       int Init(void);
@@ -125,8 +121,8 @@ private:
       bool              m_ShowHelp,m_bCaptureCursor,m_bCaptureShip;
       double m_ship_lon,m_ship_lat;
 
-	  bool             m_bUKTidesShowIcon;
-	  bool             m_bShowUKTides;
+	  bool             m_show_UKTides_icon;
+	  bool             m_show_UKTides;
 	  wxBitmap         m_panelBitmap;
 };
 
