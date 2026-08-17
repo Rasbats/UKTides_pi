@@ -112,8 +112,8 @@ int UKTides_pi::Init(void) {
   //    And load the configuration items
   LoadConfig();
 
-  auto icon = GetPluginIcon("UKTides_pi", PKG_NAME);
-  auto toggled_icon = GetPluginIcon("UKTides_pi_toggled", PKG_NAME);
+  auto icon = GetPluginIcon("uktides_pi", PKG_NAME);
+  auto toggled_icon = GetPluginIcon("uktides_pi_toggled", PKG_NAME);
   //    This PlugIn needs a toolbar icon, so request its insertion
   if (m_show_UKTides_icon) {
     if (icon.type == IconPath::Type::Svg)
