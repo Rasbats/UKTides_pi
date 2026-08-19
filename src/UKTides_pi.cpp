@@ -203,6 +203,21 @@ void UKTides_pi::OnToolbarToolCallback(int id) {
     m_pDialog->plugin = this;
     m_pDialog->Move(wxPoint(m_route_dialog_x, m_route_dialog_y));
 
+    auto icon_path = GetPluginIcon("station_icon", PKG_NAME);
+    if (icon_path.type == IconPath::Type::Svg)
+      m_pDialog->m_stationBitmap = LoadSvgIcon(icon_path.path.c_str());
+    else if (icon_path.type == IconPath::Type::Png)
+      m_pDialog->m_stationBitmap = LoadPngIcon(icon_path.path.c_str());
+    else  // icon_path.type == NotFound
+      wxLogWarning("Cannot find icon for basename: %s", "station_icon");
+    if (m_pDialog->m_stationBitmap.IsOk())
+      wxLogDebug("UKTidesPi::, station bitmap OK");
+    else
+      wxLogDebug("UKTidesPi::, station bitmap fail");
+
+    m_pDialog->b_clearAllIcons = false;
+    m_pDialog->b_clearSavedIcons = false;						
+
     // Toggle
     m_show_UKTides = !m_show_UKTides;
 
