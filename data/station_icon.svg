@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="12.5"
+   width="24"
    height="24"
-   viewBox="0 0 12.5 24"
+   viewBox="0 0 24 24"
    fill="none"
    stroke="currentColor"
    stroke-width="2"
@@ -126,5 +126,26 @@
        height="15.079114"
        x="1.4249201"
        y="1.633728" />
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:0;stroke-miterlimit:0;fill-opacity:1"
+       id="rect1"
+       width="8.6902771"
+       height="17.889915"
+       x="9.2230387"
+       y="0.013384396" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:0;opacity:0"
+       id="rect6"
+       width="8.6241903"
+       height="17.956053"
+       x="9.3221674"
+       y="-0.01968384" />
+    <rect
+       style="opacity:0;fill:none;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:0"
+       id="rect7"
+       width="8.5581055"
+       height="17.956053"
+       x="9.3221674"
+       y="-0.01968384" />
   </g>
 </svg>

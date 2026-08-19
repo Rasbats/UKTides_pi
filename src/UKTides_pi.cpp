@@ -39,7 +39,6 @@
 #include "ocpn_plugin.h"  //Required for OCPN plugin functions
 #include "plug_utils.h"
 
-
 #include <wx/stdpaths.h>
 
 class UKTides_pi;
@@ -70,12 +69,11 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin *p) { delete p; }
 UKTides_pi::UKTides_pi(void *ppimgr)
     : opencpn_plugin_118(ppimgr),
 
-    m_show_UKTides_icon(false)
-{
+      m_show_UKTides_icon(false) {
   // Create the PlugIn icons
   initialize_images();
   auto icon_path = GetPluginIcon("uktides_panel_icon", PKG_NAME);
-  if (icon_path.type == IconPath::Type::Svg) 
+  if (icon_path.type == IconPath::Type::Svg)
     m_panel_bitmap = LoadSvgIcon(icon_path.path.c_str());
   else if (icon_path.type == IconPath::Type::Png)
     m_panel_bitmap = LoadPngIcon(icon_path.path.c_str());
@@ -88,11 +86,7 @@ UKTides_pi::UKTides_pi(void *ppimgr)
   m_show_UKTides = false;
 }
 
-UKTides_pi::~UKTides_pi(void) { 
-    
-    delete _img_uktides; 
-
-}
+UKTides_pi::~UKTides_pi(void) { delete _img_uktides; }
 
 int UKTides_pi::Init(void) {
   AddLocaleCatalog("opencpn-UKTides_pi");
@@ -203,41 +197,52 @@ void UKTides_pi::OnToolbarToolCallback(int id) {
     m_pDialog->plugin = this;
     m_pDialog->Move(wxPoint(m_route_dialog_x, m_route_dialog_y));
 
-    auto icon_path = GetPluginIcon("station_icon", PKG_NAME);
-    if (icon_path.type == IconPath::Type::Svg)
-      m_pDialog->m_stationBitmap = LoadSvgIcon(icon_path.path.c_str());
-    else if (icon_path.type == IconPath::Type::Png)
-      m_pDialog->m_stationBitmap = LoadPngIcon(icon_path.path.c_str());
-    else  // icon_path.type == NotFound
-      wxLogWarning("Cannot find icon for basename: %s", "station_icon");
-    if (m_pDialog->m_stationBitmap.IsOk())
-      wxLogDebug("UKTidesPi::, station bitmap OK");
+    wxFileName fn;
+    wxString path;
+
+    path = GetPluginDataDir("UKTides_pi");
+    fn.SetPath(path);
+    fn.AppendDir(_T("data"));
+    fn.SetFullName("station_icon.png");
+
+    path = fn.GetFullPath();
+
+    wxLogDebug(wxString("Using station icon path: ") + path);
+    if (!wxImage::CanRead(path)) {
+      wxLogDebug("Initiating image handlers.");
+      wxInitAllImageHandlers();
+    }
+
+    wxImage stationIcon(path);
+
+    if (stationIcon.IsOk())
+      m_pDialog->m_stationBitmap = wxBitmap(stationIcon);
     else
-      wxLogDebug("UKTidesPi::, station bitmap fail");
+      wxLogMessage(_("UKTides:: station bitmap has NOT been loaded"));	
+
 
     m_pDialog->b_clearAllIcons = false;
-    m_pDialog->b_clearSavedIcons = false;						
-
-    // Toggle
-    m_show_UKTides = !m_show_UKTides;
-
-    //    Toggle dialog?
-    if (m_show_UKTides) {
-      m_pDialog->Show();
-      m_pDialog->b_clearAllIcons = false;
-      m_pDialog->b_clearSavedIcons = false;
-
-    } else {
-      m_pDialog->Hide();
-      m_pDialog->b_clearAllIcons = true;
-      m_pDialog->b_clearSavedIcons = true;
-    }
-    // Toggle is handled by the toolbar but we must keep plugin manager b_toggle
-    // updated to actual status to ensure correct status upon toolbar rebuild
-    SetToolbarItemState(m_leftclick_tool_id, m_show_UKTides);
-
-    RequestRefresh(m_parent_window);  // refresh main window
+    m_pDialog->b_clearSavedIcons = false;
   }
+  // Toggle
+  m_show_UKTides = !m_show_UKTides;
+
+  //    Toggle dialog?
+  if (m_show_UKTides) {
+    m_pDialog->Show();
+    m_pDialog->b_clearAllIcons = false;
+    m_pDialog->b_clearSavedIcons = false;
+
+  } else {
+    m_pDialog->Hide();
+    m_pDialog->b_clearAllIcons = true;
+    m_pDialog->b_clearSavedIcons = true;
+  }
+  // Toggle is handled by the toolbar but we must keep plugin manager b_toggle
+  // updated to actual status to ensure correct status upon toolbar rebuild
+  SetToolbarItemState(m_leftclick_tool_id, m_show_UKTides);
+
+  RequestRefresh(m_parent_window);  // refresh main window
 }
 
 void UKTides_pi::OnUKTidesDialogClose() {
@@ -271,63 +276,62 @@ bool UKTides_pi::LoadConfig(void) {
       m_route_dialog_x = pConf->Read("DialogPosX", 20L);
       m_route_dialog_y = pConf->Read("DialogPosY", 20L);
     }
-      if ((m_route_dialog_x < 0) || (m_route_dialog_x > m_display_width))
-        m_route_dialog_x = 40;
-      if ((m_route_dialog_y < 0) || (m_route_dialog_y > m_display_height))
-        m_route_dialog_y = 40;
+    if ((m_route_dialog_x < 0) || (m_route_dialog_x > m_display_width))
+      m_route_dialog_x = 40;
+    if ((m_route_dialog_y < 0) || (m_route_dialog_y > m_display_height))
+      m_route_dialog_y = 40;
 
-      return true;
-    }
-    else return false;
-  }
-
-  bool UKTides_pi::SaveConfig(void) {
-    wxFileConfig *pConf = (wxFileConfig *)m_pconfig;
-
-    if (pConf) {
-      pConf->SetPath(_T ( "/PlugIns/UKTides_pi" ));
-      pConf->Write(_T ( "ShowUKTidesIcon" ), m_show_UKTides_icon);
-
-      pConf->Write(_T ( "DialogPosX" ), m_route_dialog_x);
-      pConf->Write(_T ( "DialogPosY" ), m_route_dialog_y);
-
-      return true;
-    } else
-      return false;
-  }
-
-  bool UKTides_pi::RenderOverlay(wxDC & dc, PlugIn_ViewPort * vp) {
-    if (!m_pDialog) return false;
-
-    piDC pidc(dc);
-    m_pDialog->RenderOverlay(pidc, *vp);
     return true;
-  }
+  } else
+    return false;
+}
 
-  bool UKTides_pi::RenderGLOverlay(wxGLContext * pcontext,
-                                   PlugIn_ViewPort * vp) {
-    if (!m_pDialog) return false;
+bool UKTides_pi::SaveConfig(void) {
+  wxFileConfig *pConf = (wxFileConfig *)m_pconfig;
 
-    // m_pDialog->SetViewPort(vp);
-    piDC piDC;
-    glEnable(GL_BLEND);
-    piDC.SetVP(vp);
+  if (pConf) {
+    pConf->SetPath(_T ( "/PlugIns/UKTides_pi" ));
+    pConf->Write(_T ( "ShowUKTidesIcon" ), m_show_UKTides_icon);
 
-    m_pDialog->RenderOverlay(piDC, *vp);
+    pConf->Write(_T ( "DialogPosX" ), m_route_dialog_x);
+    pConf->Write(_T ( "DialogPosY" ), m_route_dialog_y);
+
     return true;
-  }
+  } else
+    return false;
+}
 
-  void UKTides_pi::OnContextMenuItemCallback(int id) {
-    if (!m_pDialog) return;
+bool UKTides_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
+  if (!m_pDialog) return false;
 
-    if (id == m_position_menu_id) {
-      m_cursor_lat = GetCursorLat();
-      m_cursor_lon = GetCursorLon();
-      m_pDialog->getPort(m_cursor_lat, m_cursor_lon);
-    }
-  }
+  piDC pidc(dc);
+  m_pDialog->RenderOverlay(pidc, *vp);
+  return true;
+}
 
-  void UKTides_pi::SetCursorLatLon(double lat, double lon) {
-    m_cursor_lat = lat;
-    m_cursor_lon = lon;
+bool UKTides_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp) {
+  if (!m_pDialog) return false;
+
+  // m_pDialog->SetViewPort(vp);
+  piDC piDC;
+  glEnable(GL_BLEND);
+  piDC.SetVP(vp);
+
+  m_pDialog->RenderOverlay(piDC, *vp);
+  return true;
+}
+
+void UKTides_pi::OnContextMenuItemCallback(int id) {
+  if (!m_pDialog) return;
+
+  if (id == m_position_menu_id) {
+    m_cursor_lat = GetCursorLat();
+    m_cursor_lon = GetCursorLon();
+    m_pDialog->getPort(m_cursor_lat, m_cursor_lon);
   }
+}
+
+void UKTides_pi::SetCursorLatLon(double lat, double lon) {
+  m_cursor_lat = lat;
+  m_cursor_lon = lon;
+}
