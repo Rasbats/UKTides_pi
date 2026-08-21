@@ -127,18 +127,6 @@
          id="path125"
          d="M 21.387592,7.4155602 C 20.516893,7.3928404 20.091574,6.9277545 20.018013,6.1125176" />
     </g>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.98369px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#999999;fill-opacity:1;stroke:#b4b4b4;stroke-width:0.598369;stroke-miterlimit:79.8403;stroke-dasharray:none;stroke-opacity:1"
-       x="8.2365713"
-       y="15.636628"
-       id="text4563"
-       transform="scale(0.99961646,1.0003837)"><tspan
-         sodipodi:role="line"
-         id="tspan4561"
-         x="8.2365713"
-         y="15.636628"
-         style="stroke-width:0.598369">UK</tspan></text>
     <g
        id="Group_1"
        transform="translate(-3.0645869,0.32283567)">
@@ -198,5 +186,17 @@
         </g>
       </g>
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.98369px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#999999;fill-opacity:1;stroke:#b4b4b4;stroke-width:0.598369;stroke-miterlimit:79.8403;stroke-dasharray:none;stroke-opacity:1"
+       x="8.2365713"
+       y="15.636628"
+       id="text4563"
+       transform="scale(0.99961646,1.0003837)"><tspan
+         sodipodi:role="line"
+         id="tspan4561"
+         x="8.2365713"
+         y="15.636628"
+         style="stroke-width:0.598369">UK</tspan></text>
   </g>
 </svg>
